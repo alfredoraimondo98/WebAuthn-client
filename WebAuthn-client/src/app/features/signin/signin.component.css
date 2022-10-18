@@ -1,0 +1,61 @@
+/*Registrazione container*/
+.signinBody{
+    padding: 5em;
+    background: transparent;
+    color: black;
+    font-weight: bold;
+}
+
+/*Background registrazione*/
+.backSignin{
+    /*background-image: url("https://img.freepik.com/free-photo/abstract-plexus-geometrical-shapes_34629-597.jpg?size=626&ext=jpg");
+    */
+    background-color: whitesmoke;
+}
+
+/*Div per la gestione del logo + logo stesso*/
+#divLogo{
+    text-align: center;
+    width: 100%;
+    overflow: hidden;
+    background: transparent;
+}
+
+#logo{
+    height: 150px;
+    width: 120px;
+    text-align: center;
+    background: transparent;
+}
+/*Fine div per la gestione del logo + logo stesso*/
+
+/* Label contenente la stringa "Registazione" */
+#labelSignin{
+    text-align: center;
+    background: transparent;
+}
+
+/*Gestione ngClass del Tab per (Anagrafica, Provenienza)*/
+.mostra_Anagrafica{
+    display: block;
+}
+.mostra_Anagrafica{
+    display: block;
+}
+.nascondi_Anagrafica{
+    display: none;
+}
+.nascondi_Provenienza{
+    display: none;
+}
+/*Fine ngClass del Tab per (Anagrafica, Provenienza)*/
+
+/*Pulsante modal che si apre quando non sono stati riempiti tutti i campi del form (il suo click viene sempre simulato da code source)*/
+.nascondiButton{
+    display: none;
+}
+
+/*Imbroglio per mantenere i div della stessa dimensione - MAI VISIBILE*/
+.accrocco{
+    color: white;
+}
