@@ -10,11 +10,13 @@ import { CoreModule } from './core/core.module';
 import { SharedModule } from './shared/shared.module';
 import { FeaturesModule } from './features/features.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { RouterModule } from '@angular/router';
+import { HttpClientModule } from '@angular/common/http';
 
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
   ],
   imports: [
     BrowserModule,
@@ -22,7 +24,9 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     CoreModule,
     SharedModule,
     FeaturesModule,
-    BrowserAnimationsModule
+    BrowserAnimationsModule,
+    RouterModule,
+    HttpClientModule
   ],
   providers: [],
   bootstrap: [AppComponent]
