@@ -14,7 +14,7 @@ import { encode } from 'base64-arraybuffer'
 export class SigninComponent implements OnInit {
    
 
-  constructor(private router : Router, private http : HttpClient, private mainService : MainService ) { }
+  constructor(private router : Router, private http : HttpClient, private mainService : MainService) { }
 
   ngOnInit(): void {
   }
@@ -25,38 +25,41 @@ export class SigninComponent implements OnInit {
     
     console.log('form data', form.value);
     if( (form.value.username !== null)){
-      
+        
       let body = {
         username : form.value.username,
       }
 
       console.log("Username ", body.username)
-      
-     this.http.post(this.mainService.urlServer+'/auth/getChallenge', body).subscribe( async (response : any) => {
+        
+      this.http.post(this.mainService.urlServer+'/auth/getSigninOptions', body).subscribe( async (response : any) => {
+        
         console.log("getChallenge response ", response)
 
         response.publicKeyCredentialCreationOptions.challenge = Uint8Array.from(response.publicKeyCredentialCreationOptions.challenge)
-        
-        response.publicKeyCredentialCreationOptions.user.id = Uint8Array.from(response.publicKeyCredentialCreationOptions.user.id)
- 
+          
+        //response.publicKeyCredentialCreationOptions.user.id = Uint8Array.from(response.publicKeyCredentialCreationOptions.user.id)
+        response.publicKeyCredentialCreationOptions.user.id = Uint8Array.from(window.atob(response.publicKeyCredentialCreationOptions.user.id), c=>c.charCodeAt(0))
+
         const newCredential = await navigator.credentials.create({
           publicKey: response.publicKeyCredentialCreationOptions
         });
- 
- 
+  
+  
         console.log("newCredential ", newCredential)
-                
+                  
         const credential = <PublicKeyCredential> newCredential //risultato ottenuto da create() per la creazione di nuove credenziali
 
         //const authenticatorAttestation = <AuthenticatorAttestationResponse> credential.response
-        
+          
         const authAttestationResponse = <AuthenticatorAttestationResponse> credential.response;
         const clientExtensionResults = credential.getClientExtensionResults();
+        const credentialId = credential.id
 
         console.log(" **** authenticator attestation response ", authAttestationResponse )
         console.log(" **** client extension results ", clientExtensionResults)
 
-      
+        
         // decode the clientDataJSON into a utf-8 string
         const utf8Decoder = new TextDecoder('utf-8');
         const decodedClientData = utf8Decoder.decode(authAttestationResponse.clientDataJSON)
@@ -65,20 +68,21 @@ export class SigninComponent implements OnInit {
         const clientDataObj = JSON.parse(decodedClientData);
         console.log("clientDataObj decoded", clientDataObj)
 
-        
+          
         // Encode attestationObject to base64 to send it to server
         // note: a CBOR decoder library is needed here.
         const base64AttestationObject = encode(authAttestationResponse.attestationObject)
-       
+        
         // body signin
         let body_signin = {
           clientDataJSON : clientDataObj,
-          attestationObject : base64AttestationObject
+          attestationObject : base64AttestationObject,
+          credentialId : credentialId
         }
 
         console.log("body signin", body_signin)
 
-        // sende to server info about user and new credential 
+        // send to server info about user and new credential 
         this.http.post(this.mainService.urlServer+'/auth/signin', body_signin).subscribe( async (response : any) => {
 
           console.log("signin response ", response)
@@ -86,20 +90,20 @@ export class SigninComponent implements OnInit {
         }, error => {
           console.log('error',error.error.text)
         })
-        
- 
-         
+          
+  
+          
 
-        //this.router.navigateByUrl('login')
+        this.router.navigateByUrl('login')
       }, error => {
         console.log('error',error.error.text)
       })
- 
-    /*}else{ //apre il modal che informa l'utente che deve compilare i campi restanti della registrazione
-      document.getElementById('modalRegistrazioneNonCompleta').click()
+  
+      /*}else{ //apre il modal che informa l'utente che deve compilare i campi restanti della registrazione
+        document.getElementById('modalRegistrazioneNonCompleta').click()
+      }
+      */
     }
-    */
-  }
   }
 
 }
