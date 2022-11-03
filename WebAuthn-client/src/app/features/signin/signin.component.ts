@@ -3,8 +3,13 @@ import { Component, OnInit } from '@angular/core';
 import { CheckboxRequiredValidator, NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
 import { MainService } from 'src/app/service/main.service';
-import { encode } from 'base64-arraybuffer'
+import { decode, encode } from 'base64-arraybuffer'
 
+// declare the javascript function here
+declare function loadPKCS11(): any;
+declare function arrayBufferToString(buffer : ArrayBuffer) : any;
+declare function strToArrayBuffer(str: String) : ArrayBuffer;
+declare function decodeCBOR(authAttestationResponse : AuthenticatorAttestationResponse) : any;
 
 @Component({
   selector: 'app-signin',
@@ -17,6 +22,8 @@ export class SigninComponent implements OnInit {
   constructor(private router : Router, private http : HttpClient, private mainService : MainService) { }
 
   ngOnInit(): void {
+    //loadPKCS11();
+
   }
 
 
@@ -35,17 +42,27 @@ export class SigninComponent implements OnInit {
       this.http.post(this.mainService.urlServer+'/auth/getSigninOptions', body).subscribe( async (response : any) => {
         
         console.log("getChallenge response ", response)
+        
+        //response.publicKeyCredentialCreationOptions.challenge = decode(response.publicKeyCredentialCreationOptions.challenge) //decode challenge from base64 to ArrayBuffer
+        response.publicKeyCredentialCreationOptions.challenge = strToArrayBuffer(response.publicKeyCredentialCreationOptions.challenge) ;//Uint8Array.from(response.publicKeyCredentialCreationOptions.challenge, c => c.charCodeAt(0))
+        //console.log("challenge string :" , new TextDecoder().decode(response.publicKeyCredentialCreationOptions.challenge))
+        response.publicKeyCredentialCreationOptions.user.id = strToArrayBuffer(response.publicKeyCredentialCreationOptions.user.id) ;//Uint8Array.from(response.publicKeyCredentialCreationOptions.challenge, c => c.charCodeAt(0))
 
-        response.publicKeyCredentialCreationOptions.challenge = Uint8Array.from(response.publicKeyCredentialCreationOptions.challenge)
-          
+        //response.publicKeyCredentialCreationOptions.user.id = decode(response.publicKeyCredentialCreationOptions.user.id)
         //response.publicKeyCredentialCreationOptions.user.id = Uint8Array.from(response.publicKeyCredentialCreationOptions.user.id)
-        response.publicKeyCredentialCreationOptions.user.id = Uint8Array.from(window.atob(response.publicKeyCredentialCreationOptions.user.id), c=>c.charCodeAt(0))
+        //response.publicKeyCredentialCreationOptions.user.id = Uint8Array.from(window.atob(response.publicKeyCredentialCreationOptions.user.id), c=>c.charCodeAt(0))
+
+
+
 
         const newCredential = await navigator.credentials.create({
           publicKey: response.publicKeyCredentialCreationOptions
         });
-  
-  
+        
+        
+
+
+
         console.log("newCredential ", newCredential)
                   
         const credential = <PublicKeyCredential> newCredential //risultato ottenuto da create() per la creazione di nuove credenziali
@@ -77,8 +94,10 @@ export class SigninComponent implements OnInit {
         let body_signin = {
           clientDataJSON : clientDataObj,
           attestationObject : base64AttestationObject,
-          credentialId : credentialId
+          credentialId : credential.rawId //credentialId
         }
+
+        
 
         console.log("body signin", body_signin)
 
