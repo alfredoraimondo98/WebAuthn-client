@@ -37,27 +37,11 @@ export class LoginComponent implements OnInit {
         
         console.log("getLoginOptions response ", <PublicKeyCredentialRequestOptions> response)
 
-        //response.publicKeyCredentialRequestOptions.challenge = Uint8Array.from(response.publicKeyCredentialRequestOptions.challenge)
-          
-        //response.publicKeyCredentialRequestOptions.allowCredentials.id = Uint8Array.from(response.publicKeyCredentialRequestOptions.allowCredentials.id)
         
-        
-        //response.publicKeyCredentialRequestOptions.challenge = Uint8Array.from(response.publicKeyCredentialRequestOptions.challenge)
         response.publicKeyCredentialRequestOptions.challenge = strToArrayBuffer(response.publicKeyCredentialRequestOptions.challenge) ;//Uint8Array.from(response.publicKeyCredentialCreationOptions.challenge, c => c.charCodeAt(0))
 
-        //response.publicKeyCredentialRequestOptions.allowCredentials.id = Uint8Array.from(response.publicKeyCredentialRequestOptions.allowCredentials.id)
-          
-       // response.publicKeyCredentialRequestOptions.allowCredentials[0].id = decode(response.publicKeyCredentialRequestOptions.allowCredentials[0].id) //response.publicKeyCredentialRequestOptions.allowCredentials[0].id = decode(response.publicKeyCredentialRequestOptions.allowCredentials[0].id)
-
-       //X response.publicKeyCredentialRequestOptions.allowCredentials[0].id = strToArrayBuffer(response.publicKeyCredentialRequestOptions.allowCredentials[0].id) //response.publicKeyCredentialRequestOptions.allowCredentials[0].id = decode(response.publicKeyCredentialRequestOptions.allowCredentials[0].id)
         response.publicKeyCredentialRequestOptions.allowCredentials[0].id = Uint8Array.from(response.publicKeyCredentialRequestOptions.allowCredentials[0].id.data)
-        //response.publicKeyCredentialRequestOptions.allowCredentials[0].id = Uint8Array.from(window.atob(response.publicKeyCredentialRequestOptions.allowCredentials[0].id), c=>c.charCodeAt(0))
-
-        //console.log(" XXXXXXX  dec", response.publicKeyCredentialRequestOptions.allowCredentials[0].id)
-
-        //response.publicKeyCredentialRequestOptions.allowCredentials[0].id = Uint8Array.from(response.publicKeyCredentialRequestOptions.allowCredentials[0].id)
-        //response.publicKeyCredentialRequestOptions.allowCredentials[0].id = Uint8Array.from(window.atob(response.publicKeyCredentialRequestOptions.allowCredentials[0].id), c=>c.charCodeAt(0))
-
+      
         console.log(" public Key Options ", response.publicKeyCredentialRequestOptions)
  
         

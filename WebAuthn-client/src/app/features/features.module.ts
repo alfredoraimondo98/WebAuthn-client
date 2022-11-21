@@ -5,13 +5,15 @@ import { SharedModule } from '../shared/shared.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { LoginComponent } from './login/login.component';
+import { SigninAlgorandComponent } from './signin-algorand/signin-algorand.component';
 
 
 
 @NgModule({
   declarations: [
     SigninComponent,
-    LoginComponent
+    LoginComponent,
+    SigninAlgorandComponent
   ],
   imports: [
     CommonModule,
