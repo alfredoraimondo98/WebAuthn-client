@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { MainService } from 'src/app/service/main.service';
 import { encode, decode } from 'base64-arraybuffer'
 import { Assertion } from '../../interfaces/assertion'
+import { User } from 'src/app/interfaces/user';
 
 declare function strToArrayBuffer(str: String) : ArrayBuffer;
 
@@ -80,6 +81,20 @@ export class LoginComponent implements OnInit {
         // login on server
         this.http.post(this.mainService.urlServer+'/auth/login', body_login).subscribe( async (response : any) => {
           console.log(" login response ", response)
+          if(response.res == "User is authenticated"){
+            
+          let user : User = {}
+
+          user.addr = response.account.addr;
+          user.amount = response.account.amount;
+          user.username = response.account.username;
+
+          console.log("user. " , user)
+          
+          this.mainService.user = user
+          
+            this.router.navigateByUrl('my-profile')
+          }
         });
           
 

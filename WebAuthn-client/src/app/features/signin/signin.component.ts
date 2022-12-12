@@ -4,6 +4,7 @@ import { CheckboxRequiredValidator, NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
 import { MainService } from 'src/app/service/main.service';
 import { decode, encode } from 'base64-arraybuffer'
+import { User } from '../../interfaces/user'
 
 // declare the javascript function here
 declare function loadPKCS11(): any;
@@ -19,11 +20,12 @@ declare function decodeCBOR(authAttestationResponse : AuthenticatorAttestationRe
 export class SigninComponent implements OnInit {
    
 
-  constructor(private router : Router, private http : HttpClient, private mainService : MainService) { }
+  constructor(private router : Router, private http : HttpClient, public mainService : MainService) { }
 
   ngOnInit(): void {
     //loadPKCS11();
 
+   
   }
 
 

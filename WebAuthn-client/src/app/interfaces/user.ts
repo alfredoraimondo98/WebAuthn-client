@@ -1,3 +1,5 @@
 export interface User {
-    username ?: string
+    username ?: string,
+    addr ?: string,
+    amount ?: number 
 }

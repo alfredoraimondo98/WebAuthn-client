@@ -6,6 +6,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { LoginComponent } from './login/login.component';
 import { SigninAlgorandComponent } from './signin-algorand/signin-algorand.component';
+import { MyProfileComponent } from './my-profile/my-profile.component';
 
 
 
@@ -13,7 +14,8 @@ import { SigninAlgorandComponent } from './signin-algorand/signin-algorand.compo
   declarations: [
     SigninComponent,
     LoginComponent,
-    SigninAlgorandComponent
+    SigninAlgorandComponent,
+    MyProfileComponent
   ],
   imports: [
     CommonModule,

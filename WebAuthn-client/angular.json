@@ -28,7 +28,8 @@
             ],
             "scripts": [
               "src/assets/js/utils.js",
-              "src/assets/js/pkcs11.js"
+              "src/assets/js/pkcs11.js",
+              "src/assets/js/algosdk_utils.js"
             ]
           },
           "configurations": {
