@@ -22,8 +22,9 @@ export class SigninAlgorandComponent implements OnInit {
   
 
   createAccount(form : NgForm){
-
-
+    
+     
+    
     //var account =  createAlgorandAccount();
 
     //console.log("account ", account)

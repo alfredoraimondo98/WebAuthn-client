@@ -7,7 +7,7 @@
               <div>
                 <h6 class="mb-4">{{this.mainService.user.addr}}</h6>
                 <div class="d-flex align-items-center justify-content-between mb-3">
-                  <p class="small mb-0"><i class="far fa-clock me-2"></i>3 hrs</p>
+                  <p class="small mb-0"><i class="far fa-clock me-2"></i>my wallet</p>
                   <p class="fw-bold mb-0">{{this.mainService.user.amount}} Algo</p>
                 </div>
               </div>
@@ -38,18 +38,27 @@
                       </li>
                     </ul>
                   </div>
-                  <div>
-                    <button type="button" class="btn btn-outline-dark btn-rounded btn-sm"
-                      data-mdb-ripple-color="dark">+ Follow</button>
-                    <button type="button" class="btn btn-outline-dark btn-rounded btn-sm"
-                      data-mdb-ripple-color="dark">See profile</button>
-                  </div>
-                </div>
               </div>
-              <hr>
-              <p class="my-4 pb-1">52 comments</p>
-              <button type="button" class="btn btn-success btn-rounded btn-block btn-lg"><i
-                  class="far fa-clock me-2"></i>Book now</button>
+              </div>
+            
+              <div>
+                     
+        
+                <form class="px-md-2" #formReference="ngForm" (submit)="createTransaction(formReference)">
+    
+                <!-- <div class="form-outline mb-4">
+                    <input type="text" id="username" name="username" [ngModel] placeholder="username" class="form-control"/>
+                    <label class="form-label"></label>
+                  </div>
+              -->
+                
+                  <div class="d-grid gap-2 col-6 mx-auto mt-4 mb-4">
+                    <button type="submit" class="btn btn-success btn-lg btn-block">Create transaction</button>
+                  </div>
+                </form>
+    
+              </div>
+             
             </div>
           </div>
         </div>
