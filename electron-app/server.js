@@ -1,8 +1,18 @@
-var static = require('node-static');
-var file = new static.Server(`${__dirname}/public`)
+const express = require('express');
 
-require('http').createServer(function (request, response) {
-    request.addListener('end', function () {
-        file.serve(request, response)
-    }).resume()
-}).listen(9990)
+const app = express();
+  
+  
+
+const account = require('./routes/account')
+app.use('/account', account)
+
+ 
+
+
+ 
+
+app.listen(9990, () => console.log("server started")); //localhost porta 3000
+
+
+ 
