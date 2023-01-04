@@ -7,7 +7,8 @@ import { User } from '../interfaces/user';
 export class MainService {
 
   urlServer : string = 'http://localhost:3000'
-
+  urlLocalServer : string = 'http://localhost:9990'
+  
   user : User = {}
 
 }

@@ -6,7 +6,7 @@
   "scripts": {
     "start": "electron .",
     "pack": "build --dir",
-    "dist": "build"
+    "dist": "electron-builder"
   },
   "keywords": [
     "Electron",
@@ -34,6 +34,8 @@
   },
   "dependencies": {
     "@lorena-ssi/wallet-lib": "^1.1.6",
+    "algosdk": "^2.0.0",
+    "cors": "^2.8.5",
     "express": "^4.18.2",
     "express-validator": "^6.14.2",
     "node-static": "^0.7.11"

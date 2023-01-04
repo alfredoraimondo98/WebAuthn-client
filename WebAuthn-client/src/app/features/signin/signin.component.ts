@@ -34,7 +34,7 @@ export class SigninComponent implements OnInit {
     
     console.log('form data', form.value);
     if( (form.value.username !== null)){
-        
+      var username = form.value.username
       let body = {
         username : form.value.username,
       }
@@ -107,6 +107,20 @@ export class SigninComponent implements OnInit {
         this.http.post(this.mainService.urlServer+'/auth/signin', body_signin).subscribe( async (response : any) => {
 
           console.log("signin response ", response)
+
+           
+          if(response.bool){
+            console.log("bool ", response.bool, response)
+            let body_account = {
+              username : username
+            }
+            this.http.post(this.mainService.urlLocalServer+'/account/create', body_account).subscribe( async (response : any) => {
+
+              console.log("response from wallet app electron ", response)
+
+            })
+          }
+           
 
         }, error => {
           console.log('error',error.error.text)

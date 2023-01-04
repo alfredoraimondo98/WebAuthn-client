@@ -7,9 +7,7 @@ const Wallet = require('@lorena-ssi/wallet-lib').default
 const {ipcMain} = require('electron');
 const { create } = require('domain');
 
-const http = require('http')
-const { fork } = require('child_process')
-const ps = fork(`${__dirname}/server.js`)
+const server = require('./server')
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
@@ -91,7 +89,7 @@ app.on('ready', () => {
   shell.openExternal("http://www.google.com")
   
   
-  
+  server.startServer()
   
 
 })

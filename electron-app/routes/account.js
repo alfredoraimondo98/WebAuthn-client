@@ -10,5 +10,8 @@ router.get('/getAccount',
     accountController.getAccount); 
 
 
+router.post('/create',    
+    [], 
+    accountController.createWallet); 
     
 module.exports = router;
