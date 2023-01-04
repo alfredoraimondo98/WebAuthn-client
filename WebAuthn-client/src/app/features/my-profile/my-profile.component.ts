@@ -83,7 +83,7 @@ export class MyProfileComponent implements OnInit {
           console.log(" login response ", response)
 
           if(response.bool){
-            this.http.post(this.mainService.urlLocalServer+'/account/createTransaction', body_authOp).subscribe( async (response : any) => {
+            this.http.post(this.mainService.urlLocalServer+'/account/createTransaction', body).subscribe( async (response : any) => {
 
               let user : User = {}
 

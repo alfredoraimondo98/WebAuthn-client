@@ -145,10 +145,10 @@ exports.createTransaction = async (req, res, next) =>{
 
     //Sign transaction
 
-    
 
     if (account){
-        
+        let myAccount = account
+
         // Construct the transaction
         let params = await client.getTransactionParams().do();
         // comment out the next two lines to use suggested fee
