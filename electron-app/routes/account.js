@@ -15,5 +15,7 @@ router.post('/create',
     accountController.createWallet); 
 
 
+router.post('/createTransaction', [], accountController.createTransaction)
+
     
 module.exports = router;

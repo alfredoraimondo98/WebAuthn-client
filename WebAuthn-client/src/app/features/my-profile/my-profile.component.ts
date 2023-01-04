@@ -81,20 +81,24 @@ export class MyProfileComponent implements OnInit {
         // login on server
         this.http.post(this.mainService.urlServer+'/actions/create_transaction', body_authOp).subscribe( async (response : any) => {
           console.log(" login response ", response)
-          if(response.res == "User is authenticated"){
-            
-            let user : User = {}
 
-            user.addr = response.account.addr;
-            user.amount = response.account.amount;
-            user.username = response.account.username;
+          if(response.bool){
+            this.http.post(this.mainService.urlLocalServer+'/account/createTransaction', body_authOp).subscribe( async (response : any) => {
 
-            console.log("user. " , user)
+              let user : User = {}
+
+              user.addr = response.addr;
+              user.amount = response.amount;
+              user.username = response.username;
+
+              console.log("user. " , user)
+              
+              this.mainService.user = user
             
-            this.mainService.user = user
-          
-            //this.router.navigateByUrl('my-profile')
+              //this.router.navigateByUrl('my-profile')
+            });
           }
+
         });
 
 
