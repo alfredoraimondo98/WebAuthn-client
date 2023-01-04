@@ -81,19 +81,23 @@ export class LoginComponent implements OnInit {
         // login on server
         this.http.post(this.mainService.urlServer+'/auth/login', body_login).subscribe( async (response : any) => {
           console.log(" login response ", response)
-          if(response.res == "User is authenticated"){
-            
-          let user : User = {}
 
-          user.addr = response.account.addr;
-          user.amount = response.account.amount;
-          user.username = response.account.username;
+          if(response.bool){
 
-          console.log("user. " , user)
-          
-          this.mainService.user = user
-          
-            this.router.navigateByUrl('my-profile')
+            this.http.post(this.mainService.urlLocalServer+'/account/getAccount', body).subscribe( async (response : any) => {
+              console.log("response from electron app login get wallet ", response)
+              let user : User = {}
+
+              user.addr = response.addr;
+              user.amount = response.amount;
+              user.username = response.username;
+
+              console.log("user. " , user)
+              
+              this.mainService.user = user
+              
+              this.router.navigateByUrl('my-profile')
+            });
           }
         });
           

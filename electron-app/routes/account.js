@@ -5,7 +5,7 @@ const accountController = require("../controllers/account");
 
 
 
-router.get('/getAccount',    
+router.post('/getAccount',    
     [], 
     accountController.getAccount); 
 
@@ -13,5 +13,7 @@ router.get('/getAccount',
 router.post('/create',    
     [], 
     accountController.createWallet); 
+
+
     
 module.exports = router;

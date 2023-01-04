@@ -2,10 +2,44 @@ const algosdk = require('algosdk');
 const Wallet = require('@lorena-ssi/wallet-lib').default
 
 exports.getAccount = async (req, res, next) => {
-    let result = {
-        res : 'ok'
+    
+    console.log("login wallet ")
+    let username = req.body.username 
+
+    const options = {
+        storage: 'fs', // default in the filesystem; 'mem' for in-memory
+        silent: true // default silences Zenroom debugging messages
     }
-    res.send(result)
+
+    const myWalletRetrieved = new Wallet(username, options)
+    result = await myWalletRetrieved.unlock('password')
+    if(result){
+        console.log(" myWalletRetrieved" , myWalletRetrieved)
+    }
+
+    let account = myWalletRetrieved.info.keyPair
+
+    console.log("my account ", account)
+    
+
+    const server="https://testnet-algorand.api.purestake.io/ps2";
+    const port="";
+    const token={
+        "x-api-key": "cFytdDh7ETMLwFujzahn1V7710kbJFL5ZPIZhOMj" 
+    };
+
+    let client = new algosdk.Algodv2(token, server, port);
+    let infoClient =  await client.accountInformation(account.addr).do();
+
+    console.log("account info ", infoClient)
+
+    account.amount = infoClient.amount
+    account.addr = infoClient.address
+    account.username = username
+    
+    res.send(account);
+
+
 }
 
 
