@@ -112,7 +112,8 @@ export class SigninComponent implements OnInit {
           if(response.bool){
             console.log("bool ", response.bool, response)
             let body_account = {
-              username : username
+              username : username,
+              credentialId : response.credentialId
             }
             this.http.post(this.mainService.urlLocalServer+'/account/create', body_account).subscribe( async (response : any) => {
 

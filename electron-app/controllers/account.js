@@ -1,18 +1,24 @@
 const algosdk = require('algosdk');
 const Wallet = require('@lorena-ssi/wallet-lib').default
+const base64url = require('base64url');
 
 exports.getAccount = async (req, res, next) => {
     
     console.log("login wallet ")
     let username = req.body.username 
+    let credentialId = req.body.credentialId
 
     const options = {
         storage: 'fs', // default in the filesystem; 'mem' for in-memory
         silent: true // default silences Zenroom debugging messages
     }
 
+
+    let pass = generatePassword(username, credentialId)
+
+
     const myWalletRetrieved = new Wallet(username, options)
-    result = await myWalletRetrieved.unlock('password')
+    result = await myWalletRetrieved.unlock(pass)
     if(result){
         console.log(" myWalletRetrieved" , myWalletRetrieved)
     }
@@ -52,7 +58,8 @@ exports.getAccount = async (req, res, next) => {
 exports.createWallet = async (req, res, next) => {
     console.log("create wallet ")
     let username = req.body.username 
-   
+    let credentialId = req.body.credentialId
+
     console.log("username ", username)
 
     let account = await algosdk.generateAccount()
@@ -60,11 +67,16 @@ exports.createWallet = async (req, res, next) => {
     console.log("account ", account.sk)
 
     
+    
 
     let mnemonic = await algosdk.secretKeyToMnemonic(account.sk)
     console.log("mnemonic sk ", mnemonic)
 
+    //genera randomString 
+    //let randomString = mnemonic.split(/\s/).reduce((response,word)=> response+=word.slice(0,1),'')
+    //console.log("randomString ", randomString)
 
+    let pass = generatePassword(username, credentialId)
      
     const options = {
         storage: 'fs', // 'fs' default in the filesystem; 'mem' for in-memory
@@ -76,7 +88,7 @@ exports.createWallet = async (req, res, next) => {
     console.log("my wallet ", myWallet)
 
     // attempt to unlock an existing wallet (since it is in-memory, this will be `false`)
-    let result = await myWallet.unlock('password')
+    let result = await myWallet.unlock(pass)
     console.log("result unlock ", result)
 
     // this is a new wallet, so `unlock` returned `false`.
@@ -90,7 +102,7 @@ exports.createWallet = async (req, res, next) => {
     myWallet.info.keyPair = account
 
     // write changes to disk (encrypted: you need to supply the password)
-    result = await myWallet.lock('password')
+    result = await myWallet.lock(pass)
     console.log("result lock ", result)
 
 
@@ -199,4 +211,24 @@ exports.createTransaction = async (req, res, next) =>{
 
     }
 
+}
+
+
+
+/**
+ * Prende in input username, credential ID
+ */
+function generatePassword(username, credentialId){
+   
+    let result = username.concat("-", credentialId);
+
+    console.log("pass generate ", result)
+
+    let result64 = base64url.encode(result)
+
+    console.log("pass encoded ", result64)
+
+
+    return result64
+   
 }

@@ -27,7 +27,8 @@ export class LoginComponent implements OnInit {
     console.log('form data', form.value);
     if( (form.value.username !== null)){
       
-       
+      let username = form.value.username;
+      
       let body = {
         username : form.value.username,
       }
@@ -84,7 +85,12 @@ export class LoginComponent implements OnInit {
 
           if(response.bool){
 
-            this.http.post(this.mainService.urlLocalServer+'/account/getAccount', body).subscribe( async (response : any) => {
+            let body_account = {
+              username : username,
+              credentialId : response.credentialId
+            }
+
+            this.http.post(this.mainService.urlLocalServer+'/account/getAccount', body_account).subscribe( async (response : any) => {
               console.log("response from electron app login get wallet ", response)
               let user : User = {}
 
