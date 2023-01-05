@@ -1,0 +1,29 @@
+.megamenu {
+    position: static;
+  }
+  
+  .megamenu .dropdown-menu {
+    background: none;
+    border: none;
+    width: 100%;
+  }
+  
+  
+  
+  body {
+    background: #eaafc8;
+    background: -webkit-linear-gradient(to right, #eaafc8, #654ea3);
+    background: linear-gradient(to right, #eaafc8, #654ea3);
+    min-height: 100vh;
+  }
+  
+  code {
+    color: #745eb1;
+    background: #fff;
+    padding: 0.1rem 0.2rem;
+    border-radius: 0.2rem;
+  }
+  
+  .text-uppercase {
+    letter-spacing: 0.08em;
+  }
