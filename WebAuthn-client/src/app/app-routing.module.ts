@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { AboutComponent } from './features/about/about.component';
 import { LoginComponent } from './features/login/login.component';
 import { MyProfileComponent } from './features/my-profile/my-profile.component';
 import { SigninAlgorandComponent } from './features/signin-algorand/signin-algorand.component';
@@ -10,7 +11,9 @@ const routes: Routes = [
   { path:'login', component: LoginComponent},
   { path:'signin-algorand', component: SigninAlgorandComponent},
   { path:'my-profile', component: MyProfileComponent},
+  { path:'about', component: AboutComponent},
   { path:'**', redirectTo:'/signin'}
+
 ];
 
 @NgModule({

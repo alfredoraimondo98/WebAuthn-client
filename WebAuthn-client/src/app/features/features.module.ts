@@ -7,6 +7,7 @@ import { RouterModule } from '@angular/router';
 import { LoginComponent } from './login/login.component';
 import { SigninAlgorandComponent } from './signin-algorand/signin-algorand.component';
 import { MyProfileComponent } from './my-profile/my-profile.component';
+import { AboutComponent } from './about/about.component';
 
 
 
@@ -15,7 +16,8 @@ import { MyProfileComponent } from './my-profile/my-profile.component';
     SigninComponent,
     LoginComponent,
     SigninAlgorandComponent,
-    MyProfileComponent
+    MyProfileComponent,
+    AboutComponent
   ],
   imports: [
     CommonModule,
