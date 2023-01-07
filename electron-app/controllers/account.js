@@ -214,6 +214,26 @@ exports.createTransaction = async (req, res, next) =>{
 }
 
 
+exports.getMyTransaction = async (req, res, next) => {
+    let address = req.body.address;
+
+    const server="https://testnet-algorand.api.purestake.io/ps2";
+    const port="";
+    const token={
+        "x-api-key": "cFytdDh7ETMLwFujzahn1V7710kbJFL5ZPIZhOMj" 
+    };
+
+    let client = new algosdk.Algodv2(token, server, port);
+    let infoClient =  await client.accountInformation(address).do();
+
+    let transaction = await client.pendingTransactionByAddress(address).do()
+
+    console.log("my transaction ", transaction)
+
+    res.send(transaction)
+}
+
+
 
 /**
  * Prende in input username, credential ID

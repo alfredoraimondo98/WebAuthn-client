@@ -24,11 +24,23 @@ export class LoginComponent implements OnInit {
 
   /*Recupera i dati dal form di registrazione*/
   login(form : NgForm){
+
+    //Aprire app electron (myapp://)
+    /*let deepLink: HTMLElement = document.getElementById('deep-link-open') as HTMLElement;
+     
+    deepLink.click()
+    */
+
+
+  
+
+    
+
     console.log('form data', form.value);
     if( (form.value.username !== null)){
       
       let username = form.value.username;
-      
+
       let body = {
         username : form.value.username,
       }

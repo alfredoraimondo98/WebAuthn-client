@@ -20,8 +20,19 @@ export class MyProfileComponent implements OnInit {
 
   ngOnInit(): void {
     console.log("addr ", this.mainService.user.addr)
+    this.getMyTransaction()
   }
 
+
+  getMyTransaction(){
+    let body = {
+      address : this.mainService.user.addr
+    }
+
+    this.http.post(this.mainService.urlLocalServer+'/account/getMyTransaction', body).subscribe( async (response : any) => {
+      console.log("respopnse ", response)
+    });
+  }
   
   createTransaction(form : NgForm){
     

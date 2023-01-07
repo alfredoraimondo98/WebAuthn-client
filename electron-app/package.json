@@ -1,5 +1,5 @@
 {
-  "name": "webauthn-macos-win32",
+  "name": "webauthn-fido2-wallet-algorand-macos-win32",
   "version": "0.0.1",
   "description": "A wallet Electron application with deep linking (macOS/win32)",
   "main": "main.js",
@@ -14,15 +14,15 @@
     "win32",
     "deep linking"
   ],
-  "author": "WebAuthN-FIDO2-Wallet",
+  "author": "WebAuthN-FIDO2-Wallet-Algorand",
   "devDependencies": {
     "electron": "^22.0.0",
     "electron-builder": "^23.6.0"
   },
   "build": {
-    "appId": "webauthn-macos-win32",
+    "appId": "webauthn-fido2-wallet-algorandmacos-win32",
     "protocols": {
-      "name": "webauthn-macos-win32",
+      "name": "webauthn-fido2-wallet-algorandmacos-win32",
       "schemes": [
         "myapp"
       ]

@@ -17,5 +17,5 @@ router.post('/create',
 
 router.post('/createTransaction', [], accountController.createTransaction)
 
-    
+router.post('/getMyTransaction', accountController.getMyTransaction);
 module.exports = router;
