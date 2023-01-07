@@ -50,6 +50,7 @@ function createWindow() {
       contextIsolation: false
     }
   })
+  mainWindow.setMenu(null) 
 
   // and load the index.html of the app.
   mainWindow.loadURL(
@@ -61,7 +62,7 @@ function createWindow() {
   )
 
   // Open the DevTools.
-  mainWindow.webContents.openDevTools()
+  //mainWindow.webContents.openDevTools()
 
   // Protocol handler for win32
   if (process.platform == 'win32') {
@@ -86,7 +87,7 @@ app.on('ready', () => {
   createWindow() 
 
   // aprire collegamento esterno
-  shell.openExternal("http://www.google.com")
+  //shell.openExternal("http://www.google.com")
   
   
   server.startServer()

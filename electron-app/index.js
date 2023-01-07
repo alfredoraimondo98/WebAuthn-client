@@ -1,4 +1,4 @@
-const {ipcRenderer} = require('electron');
+/*const {ipcRenderer} = require('electron');
 
 ipcRenderer.on('open-window-response', (event, arg) => {
     // prints "pong" in the JS console (chromium)
@@ -19,3 +19,6 @@ button.addEventListener('click',() => {
 }, false);  
 
 document.body.appendChild(button)
+
+
+*/
