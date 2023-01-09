@@ -9,6 +9,7 @@ import { SigninAlgorandComponent } from './signin-algorand/signin-algorand.compo
 import { MyProfileComponent } from './my-profile/my-profile.component';
 import { AboutComponent } from './about/about.component';
 import { DownloadComponent } from './download/download.component';
+import { HomepageComponent } from './homepage/homepage.component';
 
 
 
@@ -19,7 +20,8 @@ import { DownloadComponent } from './download/download.component';
     SigninAlgorandComponent,
     MyProfileComponent,
     AboutComponent,
-    DownloadComponent
+    DownloadComponent,
+    HomepageComponent
   ],
   imports: [
     CommonModule,
