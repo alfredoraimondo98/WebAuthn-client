@@ -2,7 +2,7 @@
 <html>
   <head>
     <meta charset="UTF-8">
-    <title>WebAuthN/Fido2 Wallet Algorand</title>
+    <title>WebAuthN/Fido2 Algorand Wallet</title>
     <link rel="stylesheet" type="text/css" href="./index.css">
 
   </head>
@@ -26,7 +26,7 @@
   
       <!-- the username -->
       <h1>
-          John Doe
+        <span id="name">John Doe</span>
       </h1>
   
       <!-- and role or location -->
@@ -76,6 +76,11 @@
   </script>
 
   <script>require('./index.js')</script>
+  <script>
+      document.getElementById("name").innerHTML = "Alfredo";
 
+      
+    
+  </script>
    
 </html>
