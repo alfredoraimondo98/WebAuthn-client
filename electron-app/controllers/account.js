@@ -19,6 +19,7 @@ exports.getAccount = async (req, res, next) => {
 
     const myWalletRetrieved = new Wallet(username, options)
     result = await myWalletRetrieved.unlock(pass)
+    console.log("result ", result)
     if(result){
         console.log(" myWalletRetrieved" , myWalletRetrieved)
     }
@@ -42,7 +43,8 @@ exports.getAccount = async (req, res, next) => {
     account.amount = infoClient.amount
     account.addr = infoClient.address
     account.username = username
-    
+ 
+     
     res.send(account);
 
 
@@ -119,8 +121,12 @@ exports.createWallet = async (req, res, next) => {
 exports.createTransaction = async (req, res, next) =>{
 
     //login wallet 
-    console.log("login wallet ")
+    console.log("login wallet create transaction")
     let username = req.body.username 
+    let credentialId = req.body.credentialId
+
+
+    let pass = generatePassword(username, credentialId)
 
     const options = {
         storage: 'fs', // default in the filesystem; 'mem' for in-memory
@@ -128,7 +134,7 @@ exports.createTransaction = async (req, res, next) =>{
     }
 
     const myWalletRetrieved = new Wallet(username, options)
-    result = await myWalletRetrieved.unlock('password')
+    result = await myWalletRetrieved.unlock(pass)
     if(result){
         console.log(" myWalletRetrieved" , myWalletRetrieved)
     }
@@ -156,7 +162,7 @@ exports.createTransaction = async (req, res, next) =>{
 
 
     //Sign transaction
-
+    console.log("account ", account)
 
     if (account){
         let myAccount = account
@@ -208,6 +214,13 @@ exports.createTransaction = async (req, res, next) =>{
         console.log("Transaction Amount: %d microAlgos", confirmedTxn.txn.txn.amt);        
         console.log("Transaction Fee: %d microAlgos", confirmedTxn.txn.txn.fee);
         console.log("Account balance: %d microAlgos", accountInfo.amount);
+
+
+        let response = {
+            res : true
+        }
+
+        res.send(response)
 
     }
 

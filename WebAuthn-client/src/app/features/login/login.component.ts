@@ -102,13 +102,17 @@ export class LoginComponent implements OnInit {
               credentialId : response.credentialId
             }
 
+            let user : User = {}
+            user.credentialId = response.credentialId
+            
             this.http.post(this.mainService.urlLocalServer+'/account/getAccount', body_account).subscribe( async (response : any) => {
               console.log("response from electron app login get wallet ", response)
-              let user : User = {}
+              
 
               user.addr = response.addr;
               user.amount = response.amount;
               user.username = response.username;
+              
 
               console.log("user. " , user)
               

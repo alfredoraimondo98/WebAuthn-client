@@ -93,9 +93,15 @@ export class MyProfileComponent implements OnInit {
         this.http.post(this.mainService.urlServer+'/actions/create_transaction', body_authOp).subscribe( async (response : any) => {
           console.log(" login response ", response)
 
-          if(response.bool){
-            this.http.post(this.mainService.urlLocalServer+'/account/createTransaction', body).subscribe( async (response : any) => {
+          let body_account = {
+            username : this.mainService.user.username,
+            credentialId : this.mainService.user.credentialId
+          }
 
+
+          if(response.bool){
+            this.http.post(this.mainService.urlLocalServer+'/account/createTransaction', body_account).subscribe( async (response : any) => {
+              /*
               let user : User = {}
 
               user.addr = response.addr;
@@ -105,7 +111,7 @@ export class MyProfileComponent implements OnInit {
               console.log("user. " , user)
               
               this.mainService.user = user
-            
+            */
               //this.router.navigateByUrl('my-profile')
             });
           }
