@@ -10,6 +10,7 @@ import { MyProfileComponent } from './my-profile/my-profile.component';
 import { AboutComponent } from './about/about.component';
 import { DownloadComponent } from './download/download.component';
 import { HomepageComponent } from './homepage/homepage.component';
+import { PopupCheckCredentialsComponent } from '../shared/popup-check-credentials/popup-check-credentials.component';
 
 
 
@@ -21,7 +22,7 @@ import { HomepageComponent } from './homepage/homepage.component';
     MyProfileComponent,
     AboutComponent,
     DownloadComponent,
-    HomepageComponent
+    HomepageComponent,
   ],
   imports: [
     CommonModule,
@@ -31,7 +32,7 @@ import { HomepageComponent } from './homepage/homepage.component';
     RouterModule,
   ],
   exports: [
-    SigninComponent
+    SigninComponent,
   ]
 })
 

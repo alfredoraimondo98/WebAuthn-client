@@ -20,7 +20,16 @@ export class MyProfileComponent implements OnInit {
 
   ngOnInit(): void {
     console.log("addr ", this.mainService.user.addr)
-    this.getMyTransaction()
+    console.log("this.user", this.mainService.user)
+    this.checkCredential()
+    
+    //this.getMyTransaction()
+  }
+
+  checkCredential(){
+    if(this.mainService.user.checkCredentialBool){
+      document.getElementById('checkCredentialButton')?.click()
+    }
   }
 
 
