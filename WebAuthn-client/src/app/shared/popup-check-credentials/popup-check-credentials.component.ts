@@ -89,8 +89,8 @@ export class PopupCheckCredentialsComponent implements OnInit {
         console.log("signin response ", response)
 
         if(response.bool){
-          this.onCloseHandled()
           document.getElementById('updatedCredentialsButton')?.click()
+          this.onCloseHandled()
 
         }
          
