@@ -1,12 +1,14 @@
 const algosdk = require('algosdk');
 const Wallet = require('@lorena-ssi/wallet-lib').default
 const base64url = require('base64url');
+const fs = require('fs')
+const { homedir } = require('os')
 
 exports.getAccount = async (req, res, next) => {
     
     console.log("login wallet ")
     let username = req.body.username 
-    let credentialId = req.body.credentialId
+    let userID = req.body.userID
 
     const options = {
         storage: 'fs', // default in the filesystem; 'mem' for in-memory
@@ -14,7 +16,7 @@ exports.getAccount = async (req, res, next) => {
     }
 
 
-    let pass = generatePassword(username, credentialId)
+    let pass = generatePassword(username, userID)
 
 
     const myWalletRetrieved = new Wallet(username, options)
@@ -60,7 +62,7 @@ exports.getAccount = async (req, res, next) => {
 exports.createWallet = async (req, res, next) => {
     console.log("create wallet ")
     let username = req.body.username 
-    let credentialId = req.body.credentialId
+    let userID = req.body.userID
 
     console.log("username ", username)
 
@@ -78,7 +80,7 @@ exports.createWallet = async (req, res, next) => {
     //let randomString = mnemonic.split(/\s/).reduce((response,word)=> response+=word.slice(0,1),'')
     //console.log("randomString ", randomString)
 
-    let pass = generatePassword(username, credentialId)
+    let pass = generatePassword(username, userID)
      
     const options = {
         storage: 'fs', // 'fs' default in the filesystem; 'mem' for in-memory
@@ -123,10 +125,10 @@ exports.createTransaction = async (req, res, next) =>{
     //login wallet 
     console.log("login wallet create transaction")
     let username = req.body.username 
-    let credentialId = req.body.credentialId
+    let userID = req.body.userID
 
 
-    let pass = generatePassword(username, credentialId)
+    let pass = generatePassword(username, userID)
 
     const options = {
         storage: 'fs', // default in the filesystem; 'mem' for in-memory
@@ -251,9 +253,9 @@ exports.getMyTransaction = async (req, res, next) => {
 /**
  * Prende in input username, credential ID
  */
-function generatePassword(username, credentialId){
+function generatePassword(username, userID){
    
-    let result = username.concat("-", credentialId);
+    let result = username.concat("-", userID);
 
     console.log("pass generate ", result)
 
@@ -264,4 +266,24 @@ function generatePassword(username, credentialId){
 
     return result64
    
+}
+
+
+exports.deleteWallet = (req, res, next) => {
+    let username = req.body.username;
+    let deleted = false;
+
+    let directoryPath = `${homedir()}/.lorena/wallets/${username}`
+
+    fs.rmSync(directoryPath, { recursive: true, force: true });
+
+    if(!fs.existsSync(directoryPath)){ //ritorna false se la directory non esiste (è stata eliminata correttamente)
+        deleted = true
+    }
+
+    let result = {
+        deleted : deleted
+    }
+
+    res.send(result)
 }

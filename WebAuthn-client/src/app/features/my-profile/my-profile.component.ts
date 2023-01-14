@@ -104,7 +104,7 @@ export class MyProfileComponent implements OnInit {
 
           let body_account = {
             username : this.mainService.user.username,
-            credentialId : this.mainService.user.credentialId
+            userID : this.mainService.user.userID
           }
 
 

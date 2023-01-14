@@ -44,7 +44,9 @@ export class SigninComponent implements OnInit {
       this.http.post(this.mainService.urlServer+'/auth/getSigninOptions', body).subscribe( async (response : any) => {
         
         console.log("getChallenge response ", response)
-        
+
+        let userID = response.publicKeyCredentialCreationOptions.user.id
+
         //response.publicKeyCredentialCreationOptions.challenge = decode(response.publicKeyCredentialCreationOptions.challenge) //decode challenge from base64 to ArrayBuffer
         response.publicKeyCredentialCreationOptions.challenge = strToArrayBuffer(response.publicKeyCredentialCreationOptions.challenge) ;//Uint8Array.from(response.publicKeyCredentialCreationOptions.challenge, c => c.charCodeAt(0))
         //console.log("challenge string :" , new TextDecoder().decode(response.publicKeyCredentialCreationOptions.challenge))
@@ -53,7 +55,6 @@ export class SigninComponent implements OnInit {
         //response.publicKeyCredentialCreationOptions.user.id = decode(response.publicKeyCredentialCreationOptions.user.id)
         //response.publicKeyCredentialCreationOptions.user.id = Uint8Array.from(response.publicKeyCredentialCreationOptions.user.id)
         //response.publicKeyCredentialCreationOptions.user.id = Uint8Array.from(window.atob(response.publicKeyCredentialCreationOptions.user.id), c=>c.charCodeAt(0))
-
 
 
 
@@ -96,7 +97,9 @@ export class SigninComponent implements OnInit {
         let body_signin = {
           clientDataJSON : clientDataObj,
           attestationObject : base64AttestationObject,
-          credentialId : credential.rawId //credentialId
+          username : username,
+          credentialId : credential.rawId, //credentialId
+          userID : userID
         }
 
         
@@ -113,7 +116,7 @@ export class SigninComponent implements OnInit {
             console.log("bool ", response.bool, response)
             let body_account = {
               username : username,
-              credentialId : response.credentialId
+              userID : response.userID
             }
             this.http.post(this.mainService.urlLocalServer+'/account/create', body_account).subscribe( async (response : any) => {
 

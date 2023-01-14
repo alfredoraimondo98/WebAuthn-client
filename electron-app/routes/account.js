@@ -18,4 +18,7 @@ router.post('/create',
 router.post('/createTransaction', [], accountController.createTransaction)
 
 router.post('/getMyTransaction', accountController.getMyTransaction);
+
+router.post('/deleteWallet', accountController.deleteWallet);
+
 module.exports = router;
