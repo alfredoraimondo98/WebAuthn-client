@@ -9,7 +9,11 @@ const token={
     "x-api-key": "cFytdDh7ETMLwFujzahn1V7710kbJFL5ZPIZhOMj" 
 };
 
+const baseServerIndexer = "https://testnet-algorand.api.purestake.io/idx2";
+
+
 const client = new algosdk.Algodv2(token, server, port);
+const indexer = new algosdk.Indexer(token, baseServerIndexer, port);
 
 /**
  * Crea un asset
@@ -24,13 +28,23 @@ exports.createAsset = async (req, res, next) => {
     let object = {
         username : username
     }
+    console.log("object ", object)
     let myAccount = await getAlgorandAccount(username, userID);
+
+      // Test IPFS
+      const { create } = await import('ipfs-core');
+      let ipfs = await create()
+      const version = await ipfs.version();
+      console.log("Ipfs version : ", version.version)
+
+      const { cid } = await ipfs.add('Hello world')
+      console.log('cid ', cid)
 
     let params = await client.getTransactionParams().do();
     // comment out the next two lines to use suggested fee
     // params.fee = 1000;
     // params.flatFee = true;
-    let note = Uint8Array.from(Object.values(object)); // arbitrary data to be stored in the transaction; here, none is stored
+    let note = Uint8Array.from(Object.values(cid)); // arbitrary data to be stored in the transaction; here, none is stored
     // Asset creation specific parameters
     // The following parameters are asset specific
     // Throughout the example these will be re-used. 
@@ -108,7 +122,7 @@ exports.getMyAssets = async (req, res, next) => {
 
     let infoAccount = await client.accountInformation(myAccount.addr).do()
 
-    console.log("info account assets", infoAccount.assets)
+    //console.log("info account assets", infoAccount.assets)
     
     let assets = infoAccount.assets
 
@@ -116,20 +130,58 @@ exports.getMyAssets = async (req, res, next) => {
 
     assets.forEach( async asset => {
         let p = new Promise(async (resolve, reject) => {
-            console.log("asset ", asset)
+           // console.log("asset ", asset)
             let assetDetails = await client.accountAssetInformation(myAccount.addr, asset['asset-id']).do()
             resolve(assetDetails)
         })
         promiseArray.push(p)
     });
-   
 
+    console.log("transaction of assets ", await indexer.lookupAssetTransactions('154328835').do())
+    let r =  await indexer.lookupTransactionByID('4CE6HPWGGKM556GJGLYL4LSABYRKEJW5QN3BOKVEBQC3XNS5VQLA').do() 
+    console.log("transaction ", r)
+
+
+    // Test IPFS
+    /*
+    const { create } = await import('ipfs-core');
+    let ipfs = await create()
+    const version = await ipfs.version();
+    console.log("Ipfs version : ", version.version)
+    /*
+        let assetid = '154328835'
+        // note: if you have an indexer instance available it is easier to just search accounts for an asset
+        let accountInfo = await client.accountInformation(myAccount.addr).do();
+        for (idx = 0; idx < accountInfo['assets'].length; idx++) {
+            let scrutinizedAsset = accountInfo['assets'][idx];
+            if (scrutinizedAsset['asset-id'] == assetid) {
+                let myassetholding = JSON.stringify(scrutinizedAsset, undefined, 2);
+                console.log("assetholdinginfo = " + myassetholding);
+                break;
+            }
+        }
+
+
+        for (idx = 0; idx < accountInfo['created-assets'].length; idx++) {
+            let scrutinizedAsset = accountInfo['created-assets'][idx];
+            if (scrutinizedAsset['index'] == assetid) {
+                console.log("AssetID = " + scrutinizedAsset['index']);
+                let myparms = JSON.stringify(scrutinizedAsset['params'], undefined, 2);
+                console.log("parms = " + myparms);
+                break;
+            }
+        }
+    
+    */
+    res.send(r)
+
+    /*
     Promise.all(promiseArray).then( (assets) => {
-        console.log("asset", assets)
+        //console.log("asset", assets)
 
         res.send(assets)
     })   
-
+    */
 }
 
 /**
