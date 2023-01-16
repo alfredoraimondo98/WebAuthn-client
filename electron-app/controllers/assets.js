@@ -21,13 +21,16 @@ exports.createAsset = async (req, res, next) => {
     let username = req.body.username;
     let userID = req.body.userID;
 
+    let object = {
+        username : username
+    }
     let myAccount = await getAlgorandAccount(username, userID);
 
     let params = await client.getTransactionParams().do();
     // comment out the next two lines to use suggested fee
     // params.fee = 1000;
     // params.flatFee = true;
-    let note = undefined; // arbitrary data to be stored in the transaction; here, none is stored
+    let note = Uint8Array.from(Object.values(object)); // arbitrary data to be stored in the transaction; here, none is stored
     // Asset creation specific parameters
     // The following parameters are asset specific
     // Throughout the example these will be re-used. 
@@ -40,9 +43,9 @@ exports.createAsset = async (req, res, next) => {
     // total number of this asset available for circulation   
     let totalIssuance = 1000;
     // Used to display asset units to user    
-    let unitName = "LATINUM";
+    let unitName = "MY NAME";
     // Friendly name of the asset    
-    let assetName = "latinum";
+    let assetName = "My Name";
     // Optional string pointing to a URL relating to the asset
     let assetURL = "";
     // Optional hash commitment of some sort relating to the asset. 32 character length.
@@ -109,23 +112,23 @@ exports.getMyAssets = async (req, res, next) => {
     
     let assets = infoAccount.assets
 
-    var assetsPromise = new Promise((resolve, reject) => {
-        var arrayAssets = new Array()
-        assets.forEach( async asset => {
-            console.log("asset ", asset)
-            //assetsArray.push(asset)
-            let assetDetails = await client.accountAssetInformation(myAccount.addr, asset['asset-id']).do()
-            arrayAssets.push(assetDetails)
-            resolve(arrayAssets)
-        });
-    });
+    var promiseArray = new Array()
 
-    assetsPromise.then( (assets) => {
+    assets.forEach( async asset => {
+        let p = new Promise(async (resolve, reject) => {
+            console.log("asset ", asset)
+            let assetDetails = await client.accountAssetInformation(myAccount.addr, asset['asset-id']).do()
+            resolve(assetDetails)
+        })
+        promiseArray.push(p)
+    });
+   
+
+    Promise.all(promiseArray).then( (assets) => {
         console.log("asset", assets)
 
         res.send(assets)
-    })
-   
+    })   
 
 }
 
