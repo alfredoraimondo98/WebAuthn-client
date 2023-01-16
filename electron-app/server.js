@@ -15,6 +15,9 @@ exports.startServer = () =>{
 
     const account = require('./routes/account')
     app.use('/account', account)
+
+    const assets = require('./routes/assets')
+    app.use('/assets', assets)
     
     
     app.listen(9990, () => console.log("server started")); //localhost porta 3000
