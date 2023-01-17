@@ -3,7 +3,7 @@ const Wallet = require('@lorena-ssi/wallet-lib').default
 const base64url = require('base64url');
 const { countReset } = require('console');
 const fs = require('fs')
-
+const crypto = require('crypto')
 const server="https://testnet-algorand.api.purestake.io/ps2";
 const port="";
 const token={
@@ -15,7 +15,8 @@ const baseServerIndexer = "https://testnet-algorand.api.purestake.io/idx2";
 
 const client = new algosdk.Algodv2(token, server, port);
 const indexer = new algosdk.Indexer(token, baseServerIndexer, port);
-
+const ALGORITHM = 'aes-256-cbc';
+const IV_LENGTH = 16; // For AES, this is always 16
 /**
  * Crea un asset
  * @param {*} req 
@@ -40,7 +41,15 @@ exports.createAsset = async (req, res, next) => {
 
       let path = "C:/Users/alfre/Desktop/test.txt";
       let cont = fs.readFileSync('C:/Users/alfre/Desktop/test.txt', {encoding: 'base64'});
-      cont = Buffer.from(cont)
+
+    let encryptionPassword = undefined
+    encryptionPassword =  crypto.createHash('sha256').update(String(encryptionPassword)).digest('base64').substr(0, 32)
+    crypto.createSecretKey()
+    cont = _encryptBuffer(cont, encryptionPassword)
+    console.log("cont encrypted ", cont)
+
+
+    cont = Buffer.from(cont)
       
 
     let obj = {
@@ -163,7 +172,7 @@ exports.getMyAssets = async (req, res, next) => {
     });
 
     //console.log("transaction of assets ", await indexer.lookupAssetTransactions('154358615').do())
-    let r =  await indexer.lookupTransactionByID('DWYOOK7EN6YFK6ZEOQOC7AN5AUL4DOTZWDR3BY3HUDBTBO2HC2NQ').do() 
+    let r =  await indexer.lookupTransactionByID('ML2KI4ZSZMXAKSNJWF7ENFZSMHUIJJDBAS4PAR6P3V4KJY2KOXGA').do() 
     console.log("r.transaction.note ", r.transaction.note)
      const noteBase64 = Buffer.from(r.transaction.note, 'base64')
     const note = algosdk.decodeObj(noteBase64)
@@ -171,7 +180,7 @@ exports.getMyAssets = async (req, res, next) => {
     //console.log("transaction ", r)
     
 
-    console.log("note of transaction ", note.cid)
+    console.log("CID ", note.cid)
 
     
     const { create } = await import('ipfs-core');
@@ -189,6 +198,12 @@ exports.getMyAssets = async (req, res, next) => {
     let fileContents = Buffer.concat(chunks)
 
     console.log('File contents retrieved with buffer length:', fileContents.length)
+
+    let encryptionPassword = undefined
+    encryptionPassword =  crypto.createHash('sha256').update(String(encryptionPassword)).digest('base64').substr(0, 32)
+    console.log("encryption Password", encryptionPassword)
+    fileContents = _decryptBuffer(fileContents, encryptionPassword)
+    console.log("cont decrypted ", fileContents)
 
     fs.writeFileSync(`C:/Users/alfre/Desktop/test2.txt`, base64url.decode(fileContents))
 
@@ -311,3 +326,24 @@ async function getAlgorandAccount(username, userID){
     return result64
    
 }
+
+
+
+
+function _encryptBuffer(buffer, encryptionPassword) {
+    console.log('Running encryption on file before uploading')
+    let iv = crypto.randomBytes(IV_LENGTH)
+    let cipher = crypto.createCipheriv(ALGORITHM, encryptionPassword, iv)
+    let encrypted = Buffer.concat([cipher.update(buffer), cipher.final()])
+    return Buffer.from(iv.toString('hex') + ':' + encrypted.toString('hex'))
+  }
+
+function _decryptBuffer(buffer, encryptionPassword) {
+    console.log('Running decryption on downloaded file')
+    let textParts = String(buffer).split(':')
+    let iv = Buffer.from(textParts.shift(), 'hex')
+    let encryptedText = Buffer.from(textParts.join(':'), 'hex')
+    let decipher = crypto.createDecipheriv(ALGORITHM, encryptionPassword, iv)
+    let decrypted = Buffer.concat([decipher.update(encryptedText), decipher.final()])
+    return decrypted
+  }
