@@ -1,7 +1,8 @@
 const algosdk = require('algosdk');
 const Wallet = require('@lorena-ssi/wallet-lib').default
 const base64url = require('base64url');
-
+const { countReset } = require('console');
+const fs = require('fs')
 
 const server="https://testnet-algorand.api.purestake.io/ps2";
 const port="";
@@ -37,14 +38,38 @@ exports.createAsset = async (req, res, next) => {
       const version = await ipfs.version();
       console.log("Ipfs version : ", version.version)
 
-      const { cid } = await ipfs.add('Hello world')
+      let path = "C:/Users/alfre/Desktop/test.txt";
+      let cont = fs.readFileSync('C:/Users/alfre/Desktop/test.txt', {encoding: 'base64'});
+      cont = Buffer.from(cont)
+      
+
+    let obj = {
+        pathname : path,
+        content : cont
+    }
+      const cid = await ipfs.add(obj)
+       
       console.log('cid ', cid)
+
+ 
+     
+    
 
     let params = await client.getTransactionParams().do();
     // comment out the next two lines to use suggested fee
     // params.fee = 1000;
     // params.flatFee = true;
-    let note = Uint8Array.from(Object.values(cid)); // arbitrary data to be stored in the transaction; here, none is stored
+    let str = "Ciao Mondo"
+    const noteContents = {
+        cid: cid.path,
+        path: path
+    }
+    console.log("note contents ", noteContents)
+    let note = algosdk.encodeObj(noteContents)
+   
+    
+    //let note =  Uint8Array.from(str.split("").map(x => x.charCodeAt())) //Uint8Array.from('object'); // arbitrary data to be stored in the transaction; here, none is stored
+    console.log("note ", note)
     // Asset creation specific parameters
     // The following parameters are asset specific
     // Throughout the example these will be re-used. 
@@ -137,11 +162,62 @@ exports.getMyAssets = async (req, res, next) => {
         promiseArray.push(p)
     });
 
-    console.log("transaction of assets ", await indexer.lookupAssetTransactions('154328835').do())
-    let r =  await indexer.lookupTransactionByID('4CE6HPWGGKM556GJGLYL4LSABYRKEJW5QN3BOKVEBQC3XNS5VQLA').do() 
-    console.log("transaction ", r)
+    //console.log("transaction of assets ", await indexer.lookupAssetTransactions('154358615').do())
+    let r =  await indexer.lookupTransactionByID('DWYOOK7EN6YFK6ZEOQOC7AN5AUL4DOTZWDR3BY3HUDBTBO2HC2NQ').do() 
+    console.log("r.transaction.note ", r.transaction.note)
+     const noteBase64 = Buffer.from(r.transaction.note, 'base64')
+    const note = algosdk.decodeObj(noteBase64)
+   
+    //console.log("transaction ", r)
+    
+
+    console.log("note of transaction ", note.cid)
+
+    
+    const { create } = await import('ipfs-core');
 
 
+
+    let ipfs = await create()
+    const version = await ipfs.version();
+    console.log("Ipfs version : ", version.version)
+
+    const chunks = []
+    for await (const chunk of ipfs.cat((note.cid))) {
+      chunks.push(chunk)
+    }
+    let fileContents = Buffer.concat(chunks)
+
+    console.log('File contents retrieved with buffer length:', fileContents.length)
+
+    fs.writeFileSync(`C:/Users/alfre/Desktop/test2.txt`, base64url.decode(fileContents))
+
+
+    
+
+   // let noteDecoded = algosdk.decodeObj(note)
+    //console.log("note decoded ", noteDecoded)
+    /*
+    let cid = note.cid
+
+    const { create } = await import('ipfs-core');
+    let ipfs = await create()
+    const version = await ipfs.version();
+    console.log("Ipfs version : ", version.version)
+
+    const stream = await ipfs.cat(cid)
+    console.log(" stream ", stream)
+
+
+    const decoder = new TextDecoder()
+    let data = ''
+
+    for await (const chunk of stream) {
+    // chunks of data are returned as a Uint8Array, convert it back to a string
+        data += decoder.decode(chunk, { stream: true })
+    }
+
+*/
     // Test IPFS
     /*
     const { create } = await import('ipfs-core');
@@ -173,7 +249,10 @@ exports.getMyAssets = async (req, res, next) => {
         }
     
     */
-    res.send(r)
+   let result = {
+    obj : 'ok'
+   }
+    res.send(result)
 
     /*
     Promise.all(promiseArray).then( (assets) => {
