@@ -15,6 +15,9 @@ const baseServerIndexer = "https://testnet-algorand.api.purestake.io/idx2";
 
 const client = new algosdk.Algodv2(token, server, port);
 const indexer = new algosdk.Indexer(token, baseServerIndexer, port);
+
+var ipfs = undefined;
+
 const ALGORITHM = 'aes-256-cbc';
 const IV_LENGTH = 16; // For AES, this is always 16
 /**
@@ -171,10 +174,48 @@ exports.getMyAssets = async (req, res, next) => {
         promiseArray.push(p)
     });
 
+    let assetsInfo = await Promise.all(promiseArray)
+    
+    assetsTransactionPromiseArray = new Array()
+    assetsInfo.forEach( async asset => {
+        let p = new Promise(async (resolve, reject) => {
+            let assetTransaction = await indexer.lookupAssetTransactions(asset['asset-holding']['asset-id']).do()
+            //console.log("asset transaction", assetTransaction)
+            resolve(assetTransaction) 
+        })
+        assetsTransactionPromiseArray.push(p)
+    })
+
+    let assetsTransaction = await Promise.all(assetsTransactionPromiseArray)
+
+    /*
+    assetsTransaction.forEach(async asset => {
+        
+        let content = await lookupDataFromIPFS(asset)
+
+        asset['content'] = content
+        console.log("asset ", asset)
+    }) */
+    
+    res.send(assetsTransaction)
+
+
+
+
+    /*.then( (assets) => {
+        //console.log("asset", assets)
+        let assetTransaction = await indexer.lookupAssetTransactions(asset['asset-holdin']['asset-id']).do()
+        console.log("asset transaction")
+
+        res.send(assets)
+    })   
+    */
+
     //console.log("transaction of assets ", await indexer.lookupAssetTransactions('154358615').do())
-    let r =  await indexer.lookupTransactionByID('ML2KI4ZSZMXAKSNJWF7ENFZSMHUIJJDBAS4PAR6P3V4KJY2KOXGA').do() 
+    /*
+    let r =  await indexer.lookupTransactionByID(asset['transaction']['id']).do() 
     console.log("r.transaction.note ", r.transaction.note)
-     const noteBase64 = Buffer.from(r.transaction.note, 'base64')
+    const noteBase64 = Buffer.from(r.transaction.note, 'base64')
     const note = algosdk.decodeObj(noteBase64)
    
     //console.log("transaction ", r)
@@ -183,13 +224,12 @@ exports.getMyAssets = async (req, res, next) => {
     console.log("CID ", note.cid)
 
     
-    const { create } = await import('ipfs-core');
+    if(!ipfs){
+        ipfs = await initIPFS()
+    }
 
 
-
-    let ipfs = await create()
-    const version = await ipfs.version();
-    console.log("Ipfs version : ", version.version)
+    
 
     const chunks = []
     for await (const chunk of ipfs.cat((note.cid))) {
@@ -207,7 +247,7 @@ exports.getMyAssets = async (req, res, next) => {
 
     fs.writeFileSync(`C:/Users/alfre/Desktop/test2.txt`, base64url.decode(fileContents))
 
-
+*/
     
 
    // let noteDecoded = algosdk.decodeObj(note)
@@ -262,20 +302,52 @@ exports.getMyAssets = async (req, res, next) => {
                 break;
             }
         }
+    */
+}
+
+
+/**
+ * recupera contenuto file dell'asset da IPFS
+ * @param {*} req 
+ * @param {*} res 
+ * @param {*} next 
+ */
+exports.lookupDataFromIPFSID = async (req, res, next) => {
+    let assetID = req.body.assetID
+    //console.log(" id transazione asset ", asset['transactions'][0].id)
+    if(assetID){
+        let r =  await indexer.lookupTransactionByID(assetID).do() 
+        console.log("r.transaction.note ", r.transaction.note)
+        const noteBase64 = Buffer.from(r.transaction.note, 'base64')
+        const note = algosdk.decodeObj(noteBase64)
+       
+        //console.log("transaction ", r)
+        
     
-    */
-   let result = {
-    obj : 'ok'
-   }
-    res.send(result)
-
-    /*
-    Promise.all(promiseArray).then( (assets) => {
-        //console.log("asset", assets)
-
-        res.send(assets)
-    })   
-    */
+        console.log("CID ", note.cid)
+    
+        
+        if(!ipfs){
+            ipfs = await initIPFS()
+        }
+    
+        const chunks = []
+        for await (const chunk of ipfs.cat((note.cid))) {
+          chunks.push(chunk)
+        }
+        let fileContents = Buffer.concat(chunks)
+    
+        console.log('File contents retrieved with buffer length:', fileContents.length)
+    
+        let encryptionPassword = undefined
+        encryptionPassword =  crypto.createHash('sha256').update(String(encryptionPassword)).digest('base64').substr(0, 32)
+        console.log("encryption Password", encryptionPassword)
+        fileContents = _decryptBuffer(fileContents, encryptionPassword)
+        console.log("cont decrypted ", fileContents)
+    
+        res.send(fileContents)
+        //fs.writeFileSync(`C:/Users/alfre/Desktop/test2.txt`, base64url.decode(fileContents))
+    }
 }
 
 /**
@@ -347,3 +419,19 @@ function _decryptBuffer(buffer, encryptionPassword) {
     let decrypted = Buffer.concat([decipher.update(encryptedText), decipher.final()])
     return decrypted
   }
+
+
+
+
+
+/**
+  * 
+  * @returns ipfs 
+*/
+async function initIPFS(){
+    const { create } = await import('ipfs-core');
+    ipfs = await create()
+    const version = await ipfs.version();
+    console.log("Ipfs version : ", version.version)
+    return ipfs
+}
