@@ -36,6 +36,14 @@ export class MyProfileComponent implements OnInit {
     document.getElementById('uploadDataButton')?.click()
   }
 
+  popupUploadDoc(){
+    document.getElementById('uploadDocButton')?.click()
+  }
+
+  popupUploadImg(){
+    document.getElementById('uploadImagesButton')?.click()
+  }
+
 
   getMyTransaction(){
     let body = {

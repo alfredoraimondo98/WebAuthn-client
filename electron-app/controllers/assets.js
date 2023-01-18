@@ -153,6 +153,19 @@ exports.createAsset = async (req, res, next) => {
     res.send(result)
 }
 
+exports.createImagesAsset = async(req, res, next) => {
+    console.log("req ", req)
+    console.log("req file", req.file[0]); //recuperiamo l'immagine che ci viene inviata tramite req.file
+    console.log("nome ", req.body.username) //per l'accesso ai campi di testo 
+    console.log("user id ", req.body.userID) //per l'accesso ai campi di testo 
+    console.log("name asset ", req.body.nameAsset) //per l'accesso ai campi di testo 
+
+    let result = {
+        ok : 1
+    }
+    res.send(result)
+}
+
 
 exports.getMyAssets = async (req, res, next) => {
     let username = req.body.username;

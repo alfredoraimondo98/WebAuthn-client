@@ -6,6 +6,8 @@ import { PopupUploadDataComponent } from './popup-upload-data/popup-upload-data.
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { PopupAssetCreatedComponent } from './popup-asset-created/popup-asset-created.component';
 import { RouterModule } from '@angular/router';
+import { PopupUploadDocComponent } from './popup-upload-doc/popup-upload-doc.component';
+import { PopupUploadImagesComponent } from './popup-upload-images/popup-upload-images.component';
 
 
 
@@ -14,7 +16,9 @@ import { RouterModule } from '@angular/router';
     PopupCheckCredentialsComponent,
     PopupUpdatedCredentialsComponent,
     PopupUploadDataComponent,
-    PopupAssetCreatedComponent
+    PopupAssetCreatedComponent,
+    PopupUploadDocComponent,
+    PopupUploadImagesComponent
   ],
   imports: [
     CommonModule,
@@ -27,6 +31,8 @@ import { RouterModule } from '@angular/router';
     PopupUpdatedCredentialsComponent,
     PopupUploadDataComponent,
     PopupAssetCreatedComponent,
+    PopupUploadDocComponent,
+    PopupUploadImagesComponent
   ]
 })
 

@@ -25,19 +25,16 @@ export class PopupUploadDataComponent implements OnInit {
   }
   
   createAssetWithData(form : NgForm){
-    console.log("form ", form.value.name)
     if( (form.value.name !== null && form.value.data !== null)){
         let nameAsset = form.value.name
         let dataAsset = form.value.data
-      console.log("form ", form.value.name)
+        
         let body = {
           username : this.mainService.user.username,
           userID : this.mainService.user.userID,
           nameAsset : nameAsset,
           dataAsset : dataAsset
         }
-
-        console.log("body ", body)
     
       this.http.post(this.mainService.urlLocalServer+'/assets/createAsset', body).subscribe( async (response : any) => {
         console.log("response create asset data ", response.assetID )

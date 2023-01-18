@@ -84,7 +84,7 @@
                     <span class="info-text">Salva i tuoi dati documenti utilizzando questa funzionalità.</span>
                     <hr>
                     <div class="d-grid mx-auto "> 
-                      <button type="submit" class="btn btn-primary">Salva documenti</button>
+                      <button type="submit" class="btn btn-primary" (click)="popupUploadDoc()">Salva documenti</button>
                     </div>
 
                   </div>
@@ -93,7 +93,7 @@
                     <span class="info-text">Salva le tue immagini utilizzando questa funzionalità.</span>
                     <hr>
                     <div class="d-grid mx-auto "> 
-                      <button type="submit" class="btn btn-primary">Salva immagini</button>
+                      <button type="submit" class="btn btn-primary" (click)="popupUploadImg()">Salva immagini</button>
                     </div>
 
                   </div>
@@ -110,6 +110,9 @@
   
   <app-popup-check-credentials></app-popup-check-credentials>
   <app-popup-upload-data></app-popup-upload-data>
+  <app-popup-upload-doc></app-popup-upload-doc>
+  <app-popup-upload-images></app-popup-upload-images>
+ 
 
   <!-- Transaction table -->
   <div class="container">
