@@ -12,11 +12,11 @@ const storage = multer.diskStorage({ //setting multer
 
 const fileFilter = ((req, file, callback) => { //definizione tipi di file validi 
     if(file.mimetype == 'image/pgn' || file.mimetype == 'image/jpg' || file.mimetype == 'image/jpeg' || file.mimetype == 'image/jfif' 
-        || file.mimetype == '.doc' || file.mimetype == '.docx' || file.mimetype == '.pdf' || file.mimetype == '.txt'){
+        || file.mimetype == 'doc' || file.mimetype == '.docx' || file.mimetype == '.pdf' || file.mimetype == '.txt'){
         callback(null, true); //restituisce true se il file ricevuto è di un tipo valido
     }
     else{
-        callback(null, false);
+        callback(null, true);
     }
 })
 

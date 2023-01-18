@@ -29,7 +29,7 @@ export class PopupUploadDocComponent implements OnInit {
     console.log(this.selectedFile);
   }
   
-  createAssetWithImages(form : NgForm){
+  createAssetWithDoc(form : NgForm){
     console.log(" doc ")
     if( (form.value.name !== null)){
       let nameAsset = form.value.name
@@ -52,7 +52,7 @@ export class PopupUploadDocComponent implements OnInit {
       console.log("body ", body.get('nameAsset'))
       
    
-    this.http.post(this.mainService.urlLocalServer+'/assets/createImagesAsset', body).subscribe( async (response : any) => {
+    this.http.post(this.mainService.urlLocalServer+'/assets/createDocAsset', body).subscribe( async (response : any) => {
       console.log("response create asset data ", response.assetID )
 
       if(response.assetID){
