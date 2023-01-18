@@ -29,6 +29,8 @@ const IV_LENGTH = 16; // For AES, this is always 16
 exports.createAsset = async (req, res, next) => {
     let username = req.body.username;
     let userID = req.body.userID;
+    let nameAsset = req.body.nameAsset;
+    let dataAsset = req.body.dataAsset;
 
     let object = {
         username : username
@@ -37,6 +39,7 @@ exports.createAsset = async (req, res, next) => {
     let myAccount = await getAlgorandAccount(username, userID);
 
       // Test IPFS
+      /*
       const { create } = await import('ipfs-core');
       let ipfs = await create()
       const version = await ipfs.version();
@@ -44,25 +47,27 @@ exports.createAsset = async (req, res, next) => {
 
       let path = "C:/Users/alfre/Desktop/test.txt";
       let cont = fs.readFileSync('C:/Users/alfre/Desktop/test.txt', {encoding: 'base64'});
+*/
+    let encryptionPassword = username.concat(userID).concat(String(myAccount.sk))
+    
+    encryptionPassword =  crypto.createHash('sha512').update(String(encryptionPassword)).digest('base64').substr(0, 32)
+    console.log("encryptonPassword ", encryptionPassword)
+    console.log("data ", dataAsset, Buffer.from(dataAsset))
+    let dataEnc = _encryptBuffer(Buffer.from(dataAsset), encryptionPassword)
+    console.log("cont encrypted ", dataEnc)
 
-    let encryptionPassword = undefined
-    encryptionPassword =  crypto.createHash('sha256').update(String(encryptionPassword)).digest('base64').substr(0, 32)
-    crypto.createSecretKey()
-    cont = _encryptBuffer(cont, encryptionPassword)
-    console.log("cont encrypted ", cont)
-
-
-    cont = Buffer.from(cont)
+    dataEnc = Buffer.from(dataEnc)
       
-
+    /*
     let obj = {
         pathname : path,
         content : cont
     }
-      const cid = await ipfs.add(obj)
+    
+    const cid = await ipfs.add(obj)
        
-      console.log('cid ', cid)
-
+    console.log('cid ', cid)
+*/
  
      
     
@@ -73,13 +78,12 @@ exports.createAsset = async (req, res, next) => {
     // params.flatFee = true;
     let str = "Ciao Mondo"
     const noteContents = {
-        cid: cid.path,
-        path: path
+        data: dataEnc,
+        type: 'data'
     }
     console.log("note contents ", noteContents)
     let note = algosdk.encodeObj(noteContents)
-   
-    
+
     //let note =  Uint8Array.from(str.split("").map(x => x.charCodeAt())) //Uint8Array.from('object'); // arbitrary data to be stored in the transaction; here, none is stored
     console.log("note ", note)
     // Asset creation specific parameters
@@ -94,13 +98,13 @@ exports.createAsset = async (req, res, next) => {
     // total number of this asset available for circulation   
     let totalIssuance = 1000;
     // Used to display asset units to user    
-    let unitName = "MY NAME";
+    let unitName = nameAsset;
     // Friendly name of the asset    
-    let assetName = "My Name";
+    let assetName = nameAsset;
     // Optional string pointing to a URL relating to the asset
     let assetURL = "";
     // Optional hash commitment of some sort relating to the asset. 32 character length.
-    let assetMetadataHash = "16efaa3924a6fd9d3a4824799a4ac65d";
+    let assetMetadataHash = "";
     // The following parameters are the only ones
     // that can be changed, and they have to be changed
     // by the current manager
@@ -146,7 +150,6 @@ exports.createAsset = async (req, res, next) => {
     let result = {
         assetID : assetID
     }
-
     res.send(result)
 }
 

@@ -32,6 +32,10 @@ export class MyProfileComponent implements OnInit {
     }
   }
 
+  popupUploadData(){
+    document.getElementById('uploadDataButton')?.click()
+  }
+
 
   getMyTransaction(){
     let body = {
@@ -134,4 +138,6 @@ export class MyProfileComponent implements OnInit {
  
   }
 
+
+ 
 }

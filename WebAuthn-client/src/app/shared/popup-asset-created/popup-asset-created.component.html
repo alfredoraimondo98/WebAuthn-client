@@ -1,0 +1,33 @@
+<button hidden id="assetCreatedButton" type="button" class="btn btn-info btn-lg" (click)="openModal()">click to open</button>
+
+
+    <div class="modal" tabindex="-1" role="dialog"  [ngStyle]="{'display':display}">
+
+
+        <div class="modal-dialog modal-notify modal-info" role="document">
+            <!--Content-->
+            <div class="modal-content text-center">
+              <!--Header-->
+              <div class="modal-header d-flex justify-content-center">
+                <p class="heading">Asset creato!</p>
+              </div>
+        
+              <!--Body-->
+              <div class="modal-body">
+        
+                <i class="fa fa-user fa-4x" aria-hidden="true"></i>
+        
+                <p>Il tuo asset è stato creato con successo!</p>
+               
+
+        
+              </div>
+        
+              <!--Footer-->
+              <div class="modal-footer flex-center">
+                <a class="btn btn-success" (click)="onCloseHandled()">Ok</a>
+              </div>
+            </div>
+            <!--/.Content-->
+          </div>
+    </div>

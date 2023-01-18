@@ -1,35 +1,24 @@
+
+
 <div class="container">
   <div class="main-body">
   
       
   
         <div class="row gutters-sm">
-          <div class="col-md-4 mb-3">
+          <div class="col-md-4 mb-2">
+       
+              
+            
             <div class="card">
               <div class="card-body">
                 <div class="d-flex flex-column align-items-center text-center">
-                  <img src="https://bootdey.com/img/Content/avatar/avatar7.png" alt="Admin" class="rounded-circle" width="150">
-                  <div class="mt-3">
-                    <h4>{{this.mainService.user.username}}</h4>
-                    <p class="text-secondary mb-1"></p>
-                    <p class="text-muted font-size-sm">My WebAuthN/Fido 2 Algorand Wallet</p>
-                    
-
-                    <form class="px-md-2" #formReference="ngForm" (submit)="createTransaction(formReference)">
-    
-                   
-                      
-                        <div class="d-grid gap-2 mx-auto mt-4 mb-4">
-                          <button type="submit" class="btn btn-success btn-lg btn-block">Create transaction</button>
-                        </div>
-                    </form>
-
-                    
-                  </div>
+                  <img src="https://bootdey.com/img/Content/avatar/avatar7.png" alt="Admin" class="rounded-circle" width="130">
+                 
                 </div>
               </div>
             </div>
-            
+             
           </div>
           <div class="col-md-8">
             <div class="card mb-3">
@@ -60,6 +49,7 @@
                     {{this.mainService.user.amount}}
                   </div>
                 </div>
+                  
               </div>
             </div>
 
@@ -68,17 +58,66 @@
           </div>
         </div>
 
+
+        <div class="col-md-12">
+          <div class="card mb-3">
+            <div class="card-body">
+              
+               
+              <div class="row">
+                <div class="col-sm-3">
+                  <h6 class="mb-0">Attività</h6>
+                </div>
+              </div>
+             
+              <div class="row">
+                 
+                  <div class="col-sm-4">
+                    <span class="info-text">Salva i tuoi dati personali utilizzando questa funzionalità.</span>
+                    <hr>
+                    <div class="d-grid mx-auto "> 
+                      <button type="submit" class="btn btn-primary" (click)="popupUploadData()">Salva miei dati</button>
+                    </div>
+                  </div>
+
+                  <div class="col-sm-4">
+                    <span class="info-text">Salva i tuoi dati documenti utilizzando questa funzionalità.</span>
+                    <hr>
+                    <div class="d-grid mx-auto "> 
+                      <button type="submit" class="btn btn-primary">Salva documenti</button>
+                    </div>
+
+                  </div>
+
+                  <div class="col-sm-4">
+                    <span class="info-text">Salva le tue immagini utilizzando questa funzionalità.</span>
+                    <hr>
+                    <div class="d-grid mx-auto "> 
+                      <button type="submit" class="btn btn-primary">Salva immagini</button>
+                    </div>
+
+                  </div>
+              </div>
+            </div>
+          </div>
+
+           
+
+        </div>
       </div>
   </div>
-  <app-popup-check-credentials></app-popup-check-credentials>
 
-  <!-- Transaction table 
+  
+  <app-popup-check-credentials></app-popup-check-credentials>
+  <app-popup-upload-data></app-popup-upload-data>
+
+  <!-- Transaction table -->
   <div class="container">
     <div class="row">
-        <div class="col-md-12">
+        <div class="col-md-12 p-4">
             <div class="card">
                 <div class="card-body">
-                    <h5 class="card-title text-uppercase mb-0">Le mie transazioni</h5>
+                    <h5 class="card-title text-uppercase mb-0">I Miei Assets</h5>
                 </div>
                 <div class="table-responsive">
                     <table class="table no-wrap user-table mb-0">
@@ -300,7 +339,7 @@
     </div>
     </div>
 
--->
+ 
 
 
 <!-- CARD INIZIALE DEL PROFILO (VERDE)-->

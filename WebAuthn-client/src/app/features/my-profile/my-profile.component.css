@@ -90,3 +90,9 @@ body{
     max-width: 150px;
     border-radius: 20px;
 }
+
+
+.info-text { 
+    font-size : 13px!important;
+    color: #8898aa!important;
+}
