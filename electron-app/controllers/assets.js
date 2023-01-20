@@ -160,10 +160,125 @@ exports.createImagesAsset = async(req, res, next) => {
     console.log("user id ", req.body.userID) //per l'accesso ai campi di testo 
     console.log("name asset ", req.body.nameAsset) //per l'accesso ai campi di testo 
 
+    let username = req.body.username;
+    let userID = req.body.userID;
+    let nameAsset = req.body.nameAsset;
+
+    let filename = req.body.filename
+
+
+    let myAccount = await getAlgorandAccount(username, userID);
+
+  
+    let ipfs = await initIPFS()
+    let path = 'C:/Users/alfre/Documents/GitHub/WebAuthn-client/electron-app/public/files/'+filename;
+    console.log("path ", path)
+    
+    let cont = fs.readFileSync(path, {encoding: 'base64'});
+
+    let encryptionPassword = username.concat(userID).concat(String(myAccount.sk))
+    
+    encryptionPassword =  crypto.createHash('sha512').update(String(encryptionPassword)).digest('base64').substr(0, 32)
+    console.log("encryptonPassword ", encryptionPassword)
+   // console.log("data ", dataAsset, Buffer.from(dataAsset))
+    let dataEnc = _encryptBuffer(Buffer.from(cont), encryptionPassword)
+    console.log("cont encrypted ", dataEnc)
+
+    dataEnc = Buffer.from(dataEnc)
+      
+  
+    let obj = {
+        filename : filename,
+        content : cont,
+        type : 'img'
+    }
+    
+    const cid = await ipfs.add(obj)
+       
+    console.log('cid ', cid)
+
+
+    let params = await client.getTransactionParams().do();
+    // comment out the next two lines to use suggested fee
+    // params.fee = 1000;
+    // params.flatFee = true;
+    const noteContents = {
+        data: cid.path,
+        type: 'img'
+    }
+    console.log("note contents ", noteContents)
+    let note = algosdk.encodeObj(noteContents)
+   
+    //let note =  Uint8Array.from(str.split("").map(x => x.charCodeAt())) //Uint8Array.from('object'); // arbitrary data to be stored in the transaction; here, none is stored
+    console.log("note ", note)
+    // Asset creation specific parameters
+    // The following parameters are asset specific
+    // Throughout the example these will be re-used. 
+    // We will also change the manager later in the example
+    let addr = myAccount.addr;
+
+    // Whether user accounts will need to be unfrozen before transacting    
+    let defaultFrozen = false;
+    // integer number of decimals for asset unit calculation
+    let decimals = 0;
+    // total number of this asset available for circulation   
+    let totalIssuance = 1;
+    // Used to display asset units to user    
+    let unitName = nameAsset;
+    // Friendly name of the asset    
+    let assetName = nameAsset;
+    // Optional string pointing to a URL relating to the asset
+    let assetURL = "";
+    // Optional hash commitment of some sort relating to the asset. 32 character length.
+    let assetMetadataHash = "";
+    // The following parameters are the only ones
+    // that can be changed, and they have to be changed
+    // by the current manager
+    // Specified address can change reserve, freeze, clawback, and manager
+    let manager = myAccount.addr;
+    // Specified address is considered the asset reserve
+    // (it has no special privileges, this is only informational)
+    let reserve = myAccount.addr;
+    // Specified address can freeze or unfreeze user asset holdings 
+    let freeze = myAccount.addr;
+    // Specified address can revoke user asset holdings and send 
+    // them to other addresses    
+    let clawback = myAccount.addr;
+ 
+
+    // signing and sending "txn" allows "addr" to create an asset
+    let txn = algosdk.makeAssetCreateTxnWithSuggestedParams(
+        addr, 
+        note,
+        totalIssuance, 
+        decimals, 
+        defaultFrozen, 
+        manager, 
+        reserve, 
+        freeze,
+        clawback, 
+        unitName, 
+        assetName, 
+        assetURL, 
+        assetMetadataHash, 
+        params);
+
+    let rawSignedTxn = txn.signTxn(Uint8Array.from(Object.values(myAccount.sk)))
+    let tx = (await client.sendRawTransaction(rawSignedTxn).do());
+
+    let assetID = null;
+    // wait for transaction to be confirmed
+    const ptx = await algosdk.waitForConfirmation(client, tx.txId, 4);
+    // Get the new asset's information from the creator account
+    assetID = ptx["asset-index"];
+    //Get the completed Transaction
+    console.log("Transaction " + tx.txId + " confirmed in round " + ptx["confirmed-round"]);
+
     let result = {
-        ok : 1
+        assetID : assetID
     }
     res.send(result)
+
 }
 
 exports.createDocAsset = async(req, res, next) => {
@@ -173,10 +288,129 @@ exports.createDocAsset = async(req, res, next) => {
     console.log("user id ", req.body.userID) //per l'accesso ai campi di testo 
     console.log("name asset ", req.body.nameAsset) //per l'accesso ai campi di testo 
 
+    let username = req.body.username;
+    let userID = req.body.userID;
+    let nameAsset = req.body.nameAsset;
+    let dataAsset = req.body.dataAsset;
+    let filename = req.body.filename
+
+    let object = {
+        username : username
+    }
+    console.log("object ", object)
+    let myAccount = await getAlgorandAccount(username, userID);
+
+    let ipfs = await initIPFS()
+    let path = 'C:/Users/alfre/Documents/GitHub/WebAuthn-client/electron-app/public/files/'+filename;
+    console.log("path ", path)
+    
+    let cont = fs.readFileSync(path, {encoding: 'base64'});
+
+    let encryptionPassword = username.concat(userID).concat(String(myAccount.sk))
+    
+    encryptionPassword =  crypto.createHash('sha512').update(String(encryptionPassword)).digest('base64').substr(0, 32)
+    console.log("encryptonPassword ", encryptionPassword)
+   // console.log("data ", dataAsset, Buffer.from(dataAsset))
+    let dataEnc = _encryptBuffer(Buffer.from(cont), encryptionPassword)
+    console.log("cont encrypted ", dataEnc)
+
+    dataEnc = Buffer.from(dataEnc)
+      
+  
+    let obj = {
+        filename : filename,
+        content : cont,
+        type : 'doc'
+    }
+    
+    const cid = await ipfs.add(obj)
+       
+    console.log('cid ', cid)
+
+
+    let params = await client.getTransactionParams().do();
+    // comment out the next two lines to use suggested fee
+    // params.fee = 1000;
+    // params.flatFee = true;
+    let str = "Ciao Mondo"
+    const noteContents = {
+        data: cid.path,
+        type: 'doc'
+    }
+    console.log("note contents ", noteContents)
+    let note = algosdk.encodeObj(noteContents)
+   
+    //let note =  Uint8Array.from(str.split("").map(x => x.charCodeAt())) //Uint8Array.from('object'); // arbitrary data to be stored in the transaction; here, none is stored
+    console.log("note ", note)
+    // Asset creation specific parameters
+    // The following parameters are asset specific
+    // Throughout the example these will be re-used. 
+    // We will also change the manager later in the example
+    let addr = myAccount.addr;
+
+    // Whether user accounts will need to be unfrozen before transacting    
+    let defaultFrozen = false;
+    // integer number of decimals for asset unit calculation
+    let decimals = 0;
+    // total number of this asset available for circulation   
+    let totalIssuance = 1;
+    // Used to display asset units to user    
+    let unitName = nameAsset;
+    // Friendly name of the asset    
+    let assetName = nameAsset;
+    // Optional string pointing to a URL relating to the asset
+    let assetURL = "";
+    // Optional hash commitment of some sort relating to the asset. 32 character length.
+    let assetMetadataHash = "";
+    // The following parameters are the only ones
+    // that can be changed, and they have to be changed
+    // by the current manager
+    // Specified address can change reserve, freeze, clawback, and manager
+    let manager = myAccount.addr;
+    // Specified address is considered the asset reserve
+    // (it has no special privileges, this is only informational)
+    let reserve = myAccount.addr;
+    // Specified address can freeze or unfreeze user asset holdings 
+    let freeze = myAccount.addr;
+    // Specified address can revoke user asset holdings and send 
+    // them to other addresses    
+    let clawback = myAccount.addr;
+ 
+
+    // signing and sending "txn" allows "addr" to create an asset
+    let txn = algosdk.makeAssetCreateTxnWithSuggestedParams(
+        addr, 
+        note,
+        totalIssuance, 
+        decimals, 
+        defaultFrozen, 
+        manager, 
+        reserve, 
+        freeze,
+        clawback, 
+        unitName, 
+        assetName, 
+        assetURL, 
+        assetMetadataHash, 
+        params);
+
+    let rawSignedTxn = txn.signTxn(Uint8Array.from(Object.values(myAccount.sk)))
+    let tx = (await client.sendRawTransaction(rawSignedTxn).do());
+
+    let assetID = null;
+    // wait for transaction to be confirmed
+    const ptx = await algosdk.waitForConfirmation(client, tx.txId, 4);
+    // Get the new asset's information from the creator account
+    assetID = ptx["asset-index"];
+    //Get the completed Transaction
+    console.log("Transaction " + tx.txId + " confirmed in round " + ptx["confirmed-round"]);
+
     let result = {
-        ok : 1
+        assetID : assetID
     }
     res.send(result)
+
+   
 }
 
 

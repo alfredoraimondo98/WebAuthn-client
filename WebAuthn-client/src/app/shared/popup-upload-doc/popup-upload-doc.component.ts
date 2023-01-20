@@ -26,7 +26,7 @@ export class PopupUploadDocComponent implements OnInit {
 
   onFileSelected($event : any) {
     this.selectedFile = $event.target.files[0]; //recupera il file caricato tramite il form
-    console.log(this.selectedFile);
+    console.log("file" , this.selectedFile?.name);
   }
   
   createAssetWithDoc(form : NgForm){
@@ -37,19 +37,19 @@ export class PopupUploadDocComponent implements OnInit {
       let username = this.mainService.user.username
 
       var body = new FormData();
-      this.mainService.user.username = "Raimondo"
-      this.mainService.user.userID = "2222"
+      
       if( this.mainService.user.username && this.mainService.user.userID && nameAsset && this.selectedFile ){
         console.log(" OK ")
         body.set('username', this.mainService.user.username)
         body.set('userID', this.mainService.user.userID)
         body.set('nameAsset', nameAsset)
+        body.set('filename', this.selectedFile?.name)
         body.append('data', this.selectedFile); //aggiunge in append al body il file selezionato
 
       }
 
       
-      console.log("body ", body.get('nameAsset'))
+      console.log("body ", body.get('username') )
       
    
     this.http.post(this.mainService.urlLocalServer+'/assets/createDocAsset', body).subscribe( async (response : any) => {

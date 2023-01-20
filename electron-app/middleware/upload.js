@@ -6,7 +6,7 @@ const storage = multer.diskStorage({ //setting multer
         callback(null, 'public/files') //destinazione in cui salvare le immagini
     },
     filename : (req, file, callback) => {
-        callback(null, Date.now()+ "-" + file.originalname) //definisce il nome da dare al file che viene caricato
+        callback(null, file.originalname) //definisce il nome da dare al file che viene caricato
     }
 })
 
