@@ -8,6 +8,7 @@ import { PopupAssetCreatedComponent } from './popup-asset-created/popup-asset-cr
 import { RouterModule } from '@angular/router';
 import { PopupUploadDocComponent } from './popup-upload-doc/popup-upload-doc.component';
 import { PopupUploadImagesComponent } from './popup-upload-images/popup-upload-images.component';
+import { PopupViewAssetComponent } from './popup-view-asset/popup-view-asset.component';
 
 
 
@@ -18,7 +19,8 @@ import { PopupUploadImagesComponent } from './popup-upload-images/popup-upload-i
     PopupUploadDataComponent,
     PopupAssetCreatedComponent,
     PopupUploadDocComponent,
-    PopupUploadImagesComponent
+    PopupUploadImagesComponent,
+    PopupViewAssetComponent
   ],
   imports: [
     CommonModule,
@@ -32,7 +34,8 @@ import { PopupUploadImagesComponent } from './popup-upload-images/popup-upload-i
     PopupUploadDataComponent,
     PopupAssetCreatedComponent,
     PopupUploadDocComponent,
-    PopupUploadImagesComponent
+    PopupUploadImagesComponent,
+    PopupViewAssetComponent
   ]
 })
 

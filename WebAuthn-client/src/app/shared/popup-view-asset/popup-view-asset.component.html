@@ -1,0 +1,43 @@
+<button hidden id="viewAssetButton" type="button" class="btn btn-info btn-lg" (click)="openModal()">click to open</button>
+
+<div class="modal" tabindex="-1" role="dialog"  [ngStyle]="{'display':display}">
+    <div class="modal-dialog modal-notify modal-info" role="document">
+        <!--Content-->
+        <div class="modal-content text-center">
+          <!--Header-->
+          <div class="modal-header d-flex justify-content-center">
+            <h4>Crea asset</h4>
+          </div>
+    
+          <!--Body-->
+          <div class="container">
+            <form  #formReference="ngForm" >
+          
+              <label for="name">Dati Asset</label>
+          
+              
+          
+              <div>
+                <textarea> {{this.mainService.data}}</textarea>
+
+           
+
+              </div>
+          
+              <div class="d-grid gap-2 col-6 mx-auto mt-4">
+                <button type="submit" class="btn btn-info" (click)="onCloseHandled()">Chiudi</button>
+
+              </div>
+            </form>
+
+          
+          </div>
+          <!--Footer-->
+          
+        </div>
+        <!--/.Content-->
+      </div>
+</div>
+
+
+<app-popup-asset-created></app-popup-asset-created>

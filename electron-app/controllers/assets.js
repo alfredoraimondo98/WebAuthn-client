@@ -655,7 +655,7 @@ exports.lookupDataFromIPFSID = async (req, res, next) => {
        
         let cid = ''
 
-        //let myAccount = await getAlgorandAccount(username, userID);
+        let myAccount = await getAlgorandAccount(username, userID);
 
         let encryptionPassword = username.concat(userID).concat(String(myAccount.sk))
 
@@ -691,7 +691,7 @@ exports.lookupDataFromIPFSID = async (req, res, next) => {
             console.log("decode obj " , note.data)
             dataContents = _decryptBuffer(Buffer.from(note.data), encryptionPassword)
             console.log("data content decrypted ", dataContents, dataContents.toString())
-   
+            dataContents = (dataContents).toString()
  
  
             res.send({data : dataContents})

@@ -18,7 +18,8 @@ declare function strToArrayBuffer(str: String) : ArrayBuffer;
 export class MyProfileComponent implements OnInit {
   myAssetsArray : Array<myAssets> = []
   numberOfAssets : any = 0
-  
+  dataViewAsset : string = ''
+
   constructor(private router : Router, private http : HttpClient, public mainService : MainService) { 
   }
 
@@ -47,6 +48,7 @@ export class MyProfileComponent implements OnInit {
   popupUploadImg(){
     document.getElementById('uploadImagesButton')?.click()
   }
+ 
 
 
   getMyTransaction(){
@@ -159,10 +161,10 @@ export class MyProfileComponent implements OnInit {
  
     this.http.post(this.mainService.urlLocalServer+'/assets/getMyAssets', body).subscribe( async (response : any) => {
  
-       this.mainService.user.myAssets = response
-       this.myAssetsArray = response
+      this.mainService.user.myAssets = response
+      this.myAssetsArray = response
       this.numberOfAssets = this.mainService.user.myAssets?.length
-       console.log("this.mainService.user.myAssets", this.mainService.user.myAssets)
+      console.log("this.mainService.user.myAssets", this.mainService.user.myAssets)
       
      });
      
@@ -171,15 +173,22 @@ export class MyProfileComponent implements OnInit {
   getAssetByID(asset : any){
     console.log("getassetbyid", asset)
     let body = {
-      transactionID : asset.transactionID
+      username : this.mainService.user.username,
+      userID : this.mainService.user.userID,
+      assetID : asset.idTransaction
     }
-    this.http.post(this.mainService.urlLocalServer+'/assets/getMyAssets', body).subscribe( async (response : any) => {
+    this.http.post(this.mainService.urlLocalServer+'/assets/lookupDataFromIPFSID', body).subscribe( async (response : any) => {
  
-      this.mainService.user.myAssets = response
-      this.myAssetsArray = response
-     this.numberOfAssets = this.mainService.user.myAssets?.length
-      console.log("this.mainService.user.myAssets", this.mainService.user.myAssets)
-     
+      //this.mainService.user.myAssets = response
+      console.log("response ", response.data)
+      this.mainService.data = response.data
+      console.log("data ", this.mainService.data)
+
+      if(this.mainService.data != ''){
+        console.log("apro popup")
+        document.getElementById('viewAssetButton')?.click()
+      }
+      
     });
   }
  
