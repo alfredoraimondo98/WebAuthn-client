@@ -130,6 +130,7 @@
                           <th scope="col" class="border-0 text-uppercase font-medium">Asset ID</th>
                           <th scope="col" class="border-0 text-uppercase font-medium">Asset Name</th>
                           <th scope="col" class="border-0 text-uppercase font-medium">Asset Unit Name</th>
+                          <th scope="col" class="border-0 text-uppercase font-medium">Asset ID Transaction</th>
                           <th scope="col" class="border-0 text-uppercase font-medium">Type</th>
                         </tr>
                       </thead>
@@ -152,6 +153,11 @@
                               <span class="text-muted">{{asset?.type}}</span><br>
                               <span class="text-muted">10: 55 AM</span>
                           </td>
+
+                          <td>
+                            <span class="text-muted">{{asset?.transactionID}}</span><br>
+                            <span class="text-muted">10: 55 AM</span>
+                        </td>
                        
                           <td>
                             <button type="button" (click)="getAssetByID(asset)" class="btn btn-outline-info btn-circle btn-lg btn-circle ml-2"><i class="fa fa-download"></i> </button>

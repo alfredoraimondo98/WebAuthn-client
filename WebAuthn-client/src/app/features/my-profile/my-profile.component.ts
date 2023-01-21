@@ -171,7 +171,7 @@ export class MyProfileComponent implements OnInit {
   getAssetByID(asset : any){
     console.log("getassetbyid", asset)
     let body = {
-      
+      transactionID : asset.transactionID
     }
     this.http.post(this.mainService.urlLocalServer+'/assets/getMyAssets', body).subscribe( async (response : any) => {
  

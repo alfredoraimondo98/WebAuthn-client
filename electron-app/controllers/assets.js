@@ -51,11 +51,14 @@ exports.createAsset = async (req, res, next) => {
     let encryptionPassword = username.concat(userID).concat(String(myAccount.sk))
     
     encryptionPassword =  crypto.createHash('sha512').update(String(encryptionPassword)).digest('base64').substr(0, 32)
+    console.log("encryption password", encryptionPassword)
+
     console.log("encryptonPassword ", encryptionPassword)
     console.log("data ", dataAsset, Buffer.from(dataAsset))
     let dataEnc = _encryptBuffer(Buffer.from(dataAsset), encryptionPassword)
     console.log("cont encrypted ", dataEnc)
-
+    let dataContents = _decryptBuffer(Buffer.from(dataEnc), encryptionPassword)
+    console.log("data content decrypted ", dataContents, dataContents.toString())
     dataEnc = Buffer.from(dataEnc)
       
     /*
@@ -83,6 +86,17 @@ exports.createAsset = async (req, res, next) => {
     }
     console.log("note contents ", noteContents)
     let note = algosdk.encodeObj(noteContents)
+
+    console.log("note encode obj ", note)
+    // TEST
+    const noteBase64 = Buffer.from(note, 'base64')
+    const noteDecodedObj = algosdk.decodeObj(noteBase64)
+    console.log("decode obj " , noteDecodedObj)
+      dataContents = _decryptBuffer(Buffer.from(noteDecodedObj.data), encryptionPassword)
+    console.log("data content decrypted 2 ", dataContents, dataContents.toString())
+   
+
+    //TEST
 
     //let note =  Uint8Array.from(str.split("").map(x => x.charCodeAt())) //Uint8Array.from('object'); // arbitrary data to be stored in the transaction; here, none is stored
     console.log("note ", note)
@@ -501,6 +515,14 @@ exports.getMyAssets = async (req, res, next) => {
             assetObj.unitNameAsset = ''
         }
         //console.log("asset Obj ", assetObj)
+        if(asset['transactions'][0]['id'] != undefined){
+            assetObj.idTransaction = asset['transactions'][0]['id']
+        }
+        else{
+            assetObj.idTransaction = ''
+        }
+
+
         myAssets.push(assetObj)
     })
     console.log(" assets ", myAssets)
@@ -621,39 +643,66 @@ exports.getMyAssets = async (req, res, next) => {
  * @param {*} next 
  */
 exports.lookupDataFromIPFSID = async (req, res, next) => {
+    let username = req.body.username
+    let userID = req.body.userID
     let assetID = req.body.assetID
-    //console.log(" id transazione asset ", asset['transactions'][0].id)
+    console.log(" id transazione asset ", assetID)
     if(assetID){
         let r =  await indexer.lookupTransactionByID(assetID).do() 
         console.log("r.transaction.note ", r.transaction.note)
         const noteBase64 = Buffer.from(r.transaction.note, 'base64')
         const note = algosdk.decodeObj(noteBase64)
        
+        let cid = ''
+
+        //let myAccount = await getAlgorandAccount(username, userID);
+
+        let encryptionPassword = username.concat(userID).concat(String(myAccount.sk))
+
+        encryptionPassword =  crypto.createHash('sha512').update(String(encryptionPassword)).digest('base64').substr(0, 32)
+        console.log("encryption password", encryptionPassword)
+
         //console.log("transaction ", r)
+        if(note.type == 'img' || note.type == 'doc'){
+            cid = note.data
+
+            if(!ipfs){
+                ipfs = await initIPFS()
+            }
+        
+            const chunks = []
+            for await (const chunk of ipfs.cat((cid))) {
+              chunks.push(chunk)
+            }
+            let fileContents = Buffer.concat(chunks)
+        
+            console.log('File contents retrieved with buffer length:', fileContents.length)
+
+          
+            console.log("encryption Password", encryptionPassword)
+            fileContents = _decryptBuffer(fileContents, encryptionPassword)
+            console.log("cont decrypted ", fileContents)
+            res.send(fileContents)
+        }
+        else{
+            console.log(" recupero dati", note)
+            //const noteBase64 = Buffer.from(note, 'base64')
+           // const noteDecodedObj = algosdk.decodeObj(noteBase64)
+            console.log("decode obj " , note.data)
+            dataContents = _decryptBuffer(Buffer.from(note.data), encryptionPassword)
+            console.log("data content decrypted ", dataContents, dataContents.toString())
+   
+ 
+ 
+            res.send({data : dataContents})
+        }
+       // console.log("note ", note)
+       // console.log("CID ", note.cid)
+    
+        
         
     
-        console.log("CID ", note.cid)
-    
-        
-        if(!ipfs){
-            ipfs = await initIPFS()
-        }
-    
-        const chunks = []
-        for await (const chunk of ipfs.cat((note.cid))) {
-          chunks.push(chunk)
-        }
-        let fileContents = Buffer.concat(chunks)
-    
-        console.log('File contents retrieved with buffer length:', fileContents.length)
-    
-        let encryptionPassword = undefined
-        encryptionPassword =  crypto.createHash('sha256').update(String(encryptionPassword)).digest('base64').substr(0, 32)
-        console.log("encryption Password", encryptionPassword)
-        fileContents = _decryptBuffer(fileContents, encryptionPassword)
-        console.log("cont decrypted ", fileContents)
-    
-        res.send(fileContents)
+   
         //fs.writeFileSync(`C:/Users/alfre/Desktop/test2.txt`, base64url.decode(fileContents))
 
         //const file = './public/downloads/webauthn-fido2-wallet-algorand-macos-win32 Setup 0.0.1.exe';
