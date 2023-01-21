@@ -3,7 +3,8 @@ const Wallet = require('@lorena-ssi/wallet-lib').default
 const base64url = require('base64url');
 const { countReset } = require('console');
 const fs = require('fs')
-const crypto = require('crypto')
+const crypto = require('crypto');
+const { type } = require('os');
 const server="https://testnet-algorand.api.purestake.io/ps2";
 const port="";
 const token={
@@ -315,6 +316,7 @@ exports.createDocAsset = async(req, res, next) => {
     let myAccount = await getAlgorandAccount(username, userID);
 
     let ipfs = await initIPFS()
+    
     let path = 'C:/Users/alfre/Documents/GitHub/WebAuthn-client/electron-app/public/files/'+filename;
     console.log("path ", path)
     
@@ -664,7 +666,13 @@ exports.lookupDataFromIPFSID = async (req, res, next) => {
 
         //console.log("transaction ", r)
         if(note.type == 'img' || note.type == 'doc'){
+            console.log("decode obj " , note)
+            //dataContents = _decryptBuffer(Buffer.from(note.data), encryptionPassword)
+            //console.log("data content decrypted ", dataContents, dataContents.toString())
+            //dataContents = (dataContents).toString()
+
             cid = note.data
+
 
             if(!ipfs){
                 ipfs = await initIPFS()
@@ -676,20 +684,27 @@ exports.lookupDataFromIPFSID = async (req, res, next) => {
             }
             let fileContents = Buffer.concat(chunks)
         
-            console.log('File contents retrieved with buffer length:', fileContents.length)
+            console.log('File contents retrieved with buffer length:', fileContents, fileContents.length)
 
           
             console.log("encryption Password", encryptionPassword)
-            fileContents = _decryptBuffer(fileContents, encryptionPassword)
-            console.log("cont decrypted ", fileContents)
+            //fileContents = _decryptBuffer(fileContents, encryptionPassword)
+            //console.log("cont decrypted ", fileContents)
             res.send(fileContents)
+            let d = Date.now()
+            if(note.type == 'img'){
+                fs.writeFileSync(`C:/Users/alfre/Documents/GitHub/WebAuthn-client/electron-app/public/download/`+d+`.png`, base64url.decode(fileContents))
+            }
+            else if(note.type == 'doc'){
+                fs.writeFileSync(`C:/Users/alfre/Documents/GitHub/WebAuthn-client/electron-app/public/download/`+d+`.doc`, base64url.decode(fileContents))
+            }
         }
         else{
             console.log(" recupero dati", note)
             //const noteBase64 = Buffer.from(note, 'base64')
            // const noteDecodedObj = algosdk.decodeObj(noteBase64)
             console.log("decode obj " , note.data)
-            dataContents = _decryptBuffer(Buffer.from(note.data), encryptionPassword)
+            let dataContents = _decryptBuffer(Buffer.from(note.data), encryptionPassword)
             console.log("data content decrypted ", dataContents, dataContents.toString())
             dataContents = (dataContents).toString()
  
