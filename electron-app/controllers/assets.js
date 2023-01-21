@@ -444,6 +444,7 @@ exports.getMyAssets = async (req, res, next) => {
         let p = new Promise(async (resolve, reject) => {
             let assetTransaction = await indexer.lookupAssetTransactions(asset['asset-holding']['asset-id']).do()
             //console.log("asset transaction", assetTransaction)
+            assetTransaction['asset-id'] = asset['asset-holding']['asset-id']
             resolve(assetTransaction) 
         })
         assetsTransactionPromiseArray.push(p)
@@ -459,8 +460,52 @@ exports.getMyAssets = async (req, res, next) => {
         asset['content'] = content
         console.log("asset ", asset)
     }) */
-    
-    res.send(assetsTransaction)
+    let myAssets = new Array()
+    await assetsTransaction.forEach( async asset => {
+        //console.log("asset ", asset);
+        let assetObj = {};
+        if(asset['transactions'][0]['note']){
+            const noteBase64 = Buffer.from(asset['transactions'][0]['note'], 'base64')
+            const note = await algosdk.decodeObj(noteBase64)
+            console.log("note ", note)
+            if(note['type'] != undefined){
+                assetObj.type = note['type']
+                console.log("obj ", assetObj)
+            }
+            else{
+                assetObj.type = 'data'
+            }
+        }
+
+      
+        if(asset['asset-id'] != undefined){
+            assetObj.assetID = asset['asset-id']
+        }
+        else{
+            assetObj.assetID = 00
+        }
+
+      
+        if(asset['transactions'][0]['asset-config-transaction']['params']['name'] != undefined){
+            assetObj.assetName = asset['transactions'][0]['asset-config-transaction']['params']['name']
+        }
+        else{
+            assetObj.assetName = ''
+        }
+
+      
+        if(asset['transactions'][0]['asset-config-transaction']['params']['unit-name'] != undefined){
+            assetObj.unitNameAsset = asset['transactions'][0]['asset-config-transaction']['params']['unit-name']
+        }
+        else{
+            assetObj.unitNameAsset = ''
+        }
+        //console.log("asset Obj ", assetObj)
+        myAssets.push(assetObj)
+    })
+    console.log(" assets ", myAssets)
+
+    res.send(myAssets)
 
 
 
@@ -610,6 +655,9 @@ exports.lookupDataFromIPFSID = async (req, res, next) => {
     
         res.send(fileContents)
         //fs.writeFileSync(`C:/Users/alfre/Desktop/test2.txt`, base64url.decode(fileContents))
+
+        //const file = './public/downloads/webauthn-fido2-wallet-algorand-macos-win32 Setup 0.0.1.exe';
+        //res.download(file); // Set disposition and send it.
     }
 }
 

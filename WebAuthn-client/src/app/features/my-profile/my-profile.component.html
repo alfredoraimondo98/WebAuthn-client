@@ -126,215 +126,47 @@
                     <table class="table no-wrap user-table mb-0">
                       <thead>
                         <tr>
-                          <th scope="col" class="border-0 text-uppercase font-medium">TxID</th>
-                          <th scope="col" class="border-0 text-uppercase font-medium">Block</th>
-                          <th scope="col" class="border-0 text-uppercase font-medium">Age</th>
-                          <th scope="col" class="border-0 text-uppercase font-medium">From</th>
-                          <th scope="col" class="border-0 text-uppercase font-medium">To</th>
-                          <th scope="col" class="border-0 text-uppercase font-medium">Amount</th>
-                          <th scope="col" class="border-0 text-uppercase font-medium">Fee</th>
+                          <th scope="col" class="border-0 text-uppercase font-medium">#</th>
+                          <th scope="col" class="border-0 text-uppercase font-medium">Asset ID</th>
+                          <th scope="col" class="border-0 text-uppercase font-medium">Asset Name</th>
+                          <th scope="col" class="border-0 text-uppercase font-medium">Asset Unit Name</th>
+                          <th scope="col" class="border-0 text-uppercase font-medium">Type</th>
                         </tr>
                       </thead>
-                      <tbody>
-                        <tr>
+                      <tbody *ngIf="this?.numberOfAssets > 0">
+                        <tr *ngFor="let asset of this.mainService.user.myAssets; let i = index">
                           <td class="pl-4">1</td>
                           <td>
-                              <h5 class="font-medium mb-0">Daniel Kristeen</h5>
+                              <h5 class="font-medium mb-0">{{asset?.assetID}}</h5>
                               <span class="text-muted">Texas, Unitedd states</span>
                           </td>
                           <td>
-                              <span class="text-muted">Visual Designer</span><br>
+                              <span class="text-muted">{{asset?.assetName}}</span><br>
                               <span class="text-muted">Past : teacher</span>
                           </td>
                           <td>
-                              <span class="text-muted">daniel@website.com</span><br>
+                              <span class="text-muted">{{asset?.unitNameAsset}}</span><br>
                               <span class="text-muted">999 - 444 - 555</span>
                           </td>
                           <td>
-                              <span class="text-muted">15 Mar 1988</span><br>
+                              <span class="text-muted">{{asset?.type}}</span><br>
                               <span class="text-muted">10: 55 AM</span>
                           </td>
+                       
                           <td>
-                            <select class="form-control category-select" id="exampleFormControlSelect1">
-                              <option>Modulator</option>
-                              <option>Admin</option>
-                              <option>User</option>
-                              <option>Subscriber</option>
-                            </select>
-                          </td>
-                          <td>
-                            <button type="button" class="btn btn-outline-info btn-circle btn-lg btn-circle"><i class="fa fa-key"></i> </button>
-                            <button type="button" class="btn btn-outline-info btn-circle btn-lg btn-circle ml-2"><i class="fa fa-trash"></i> </button>
-                            <button type="button" class="btn btn-outline-info btn-circle btn-lg btn-circle ml-2"><i class="fa fa-edit"></i> </button>
-                            <button type="button" class="btn btn-outline-info btn-circle btn-lg btn-circle ml-2"><i class="fa fa-upload"></i> </button>
+                            <button type="button" (click)="getAssetByID(asset)" class="btn btn-outline-info btn-circle btn-lg btn-circle ml-2"><i class="fa fa-download"></i> </button>
                           </td>
                         </tr>
+                       
+                      </tbody>
+                      <tbody *ngIf="this?.numberOfAssets == 0">
                         <tr>
-                          <td class="pl-4">2</td>
                           <td>
-                              <h5 class="font-medium mb-0">Emma Smith</h5>
-                              <span class="text-muted">Texas, Unitedd states</span>
-                          </td>
-                          <td>
-                              <span class="text-muted">Visual Designer</span><br>
-                              <span class="text-muted">Past : teacher</span>
-                          </td>
-                          <td>
-                              <span class="text-muted">daniel@website.com</span><br>
-                              <span class="text-muted">999 - 444 - 555</span>
-                          </td>
-                          <td>
-                              <span class="text-muted">15 Mar 1855</span><br>
-                              <span class="text-muted">10: 00 AM</span>
-                          </td>
-                          <td>
-                            <select class="form-control category-select" id="exampleFormControlSelect1">
-                              <option>Modulator</option>
-                              <option>Admin</option>
-                              <option>User</option>
-                              <option>Subscriber</option>
-                            </select>
-                          </td>
-                          <td>
-                            <button type="button" class="btn btn-outline-info btn-circle btn-lg btn-circle"><i class="fa fa-key"></i> </button>
-                            <button type="button" class="btn btn-outline-info btn-circle btn-lg btn-circle ml-2"><i class="fa fa-trash"></i> </button>
-                            <button type="button" class="btn btn-outline-info btn-circle btn-lg btn-circle ml-2"><i class="fa fa-edit"></i> </button>
-                            <button type="button" class="btn btn-outline-info btn-circle btn-lg btn-circle ml-2"><i class="fa fa-upload"></i> </button>
-                          </td>
-                        </tr>
-                        <tr>
-                          <td class="pl-4">3</td>
-                          <td>
-                              <h5 class="font-medium mb-0">Olivia Johnson</h5>
-                              <span class="text-muted">Texas, Unitedd states</span>
-                          </td>
-                          <td>
-                              <span class="text-muted">Visual Designer</span><br>
-                              <span class="text-muted">Past : teacher</span>
-                          </td>
-                          <td>
-                              <span class="text-muted">daniel@website.com</span><br>
-                              <span class="text-muted">999 - 444 - 555</span>
-                          </td>
-                          <td>
-                              <span class="text-muted">17 Aug 1988</span><br>
-                              <span class="text-muted">12: 55 AM</span>
-                          </td>
-                          <td>
-                            <select class="form-control category-select" id="exampleFormControlSelect1">
-                              <option>Modulator</option>
-                              <option>Admin</option>
-                              <option>User</option>
-                              <option>Subscriber</option>
-                            </select>
-                          </td>
-                          <td>
-                            <button type="button" class="btn btn-outline-info btn-circle btn-lg btn-circle"><i class="fa fa-key"></i> </button>
-                            <button type="button" class="btn btn-outline-info btn-circle btn-lg btn-circle ml-2"><i class="fa fa-trash"></i> </button>
-                            <button type="button" class="btn btn-outline-info btn-circle btn-lg btn-circle ml-2"><i class="fa fa-edit"></i> </button>
-                            <button type="button" class="btn btn-outline-info btn-circle btn-lg btn-circle ml-2"><i class="fa fa-upload"></i> </button>
-                          </td>
-                        </tr>
-                        <tr>
-                          <td class="pl-4">4</td>
-                          <td>
-                              <h5 class="font-medium mb-0">Isabella Williams</h5>
-                              <span class="text-muted">Texas, Unitedd states</span>
-                          </td>
-                          <td>
-                              <span class="text-muted">Visual Designer</span><br>
-                              <span class="text-muted">Past : teacher</span>
-                          </td>
-                          <td>
-                              <span class="text-muted">daniel@website.com</span><br>
-                              <span class="text-muted">999 - 444 - 555</span>
-                          </td>
-                          <td>
-                              <span class="text-muted">26 Mar 1999</span><br>
-                              <span class="text-muted">10: 55 AM</span>
-                          </td>
-                          <td>
-                            <select class="form-control category-select" id="exampleFormControlSelect1">
-                              <option>Modulator</option>
-                              <option>Admin</option>
-                              <option>User</option>
-                              <option>Subscriber</option>
-                            </select>
-                          </td>
-                          <td>
-                            <button type="button" class="btn btn-outline-info btn-circle btn-lg btn-circle"><i class="fa fa-key"></i> </button>
-                            <button type="button" class="btn btn-outline-info btn-circle btn-lg btn-circle ml-2"><i class="fa fa-trash"></i> </button>
-                            <button type="button" class="btn btn-outline-info btn-circle btn-lg btn-circle ml-2"><i class="fa fa-edit"></i> </button>
-                            <button type="button" class="btn btn-outline-info btn-circle btn-lg btn-circle ml-2"><i class="fa fa-upload"></i> </button>
-                          </td>
-                        </tr>
-                        <tr>
-                          <td class="pl-4">5</td>
-                          <td>
-                              <h5 class="font-medium mb-0">Sophia Jones</h5>
-                              <span class="text-muted">Texas, Unitedd states</span>
-                          </td>
-                          <td>
-                              <span class="text-muted">Visual Designer</span><br>
-                              <span class="text-muted">Past : teacher</span>
-                          </td>
-                          <td>
-                              <span class="text-muted">daniel@website.com</span><br>
-                              <span class="text-muted">999 - 444 - 555</span>
-                          </td>
-                          <td>
-                              <span class="text-muted">16 Aug 2001</span><br>
-                              <span class="text-muted">10: 55 AM</span>
-                          </td>
-                          <td>
-                            <select class="form-control category-select" id="exampleFormControlSelect1">
-                              <option>Modulator</option>
-                              <option>Admin</option>
-                              <option>User</option>
-                              <option>Subscriber</option>
-                            </select>
-                          </td>
-                          <td>
-                            <button type="button" class="btn btn-outline-info btn-circle btn-lg btn-circle"><i class="fa fa-key"></i> </button>
-                            <button type="button" class="btn btn-outline-info btn-circle btn-lg btn-circle ml-2"><i class="fa fa-trash"></i> </button>
-                            <button type="button" class="btn btn-outline-info btn-circle btn-lg btn-circle ml-2"><i class="fa fa-edit"></i> </button>
-                            <button type="button" class="btn btn-outline-info btn-circle btn-lg btn-circle ml-2"><i class="fa fa-upload"></i> </button>
-                          </td>
-                        </tr>
-                        <tr>
-                          <td class="pl-4">6</td>
-                          <td>
-                              <h5 class="font-medium mb-0">Charlotte Brown</h5>
-                              <span class="text-muted">Texas, Unitedd states</span>
-                          </td>
-                          <td>
-                              <span class="text-muted">Visual Designer</span><br>
-                              <span class="text-muted">Past : teacher</span>
-                          </td>
-                          <td>
-                              <span class="text-muted">daniel@website.com</span><br>
-                              <span class="text-muted">999 - 444 - 555</span>
-                          </td>
-                          <td>
-                              <span class="text-muted">15 Mar 1988</span><br>
-                              <span class="text-muted">10: 55 AM</span>
-                          </td>
-                          <td>
-                            <select class="form-control category-select" id="exampleFormControlSelect1">
-                              <option>Modulator</option>
-                              <option>Admin</option>
-                              <option>User</option>
-                              <option>Subscriber</option>
-                            </select>
-                          </td>
-                          <td>
-                            <button type="button" class="btn btn-outline-info btn-circle btn-lg btn-circle"><i class="fa fa-key"></i> </button>
-                            <button type="button" class="btn btn-outline-info btn-circle btn-lg btn-circle ml-2"><i class="fa fa-trash"></i> </button>
-                            <button type="button" class="btn btn-outline-info btn-circle btn-lg btn-circle ml-2"><i class="fa fa-edit"></i> </button>
-                            <button type="button" class="btn btn-outline-info btn-circle btn-lg btn-circle ml-2"><i class="fa fa-upload"></i> </button>
+                              <span class="text-muted">Non sono disponibili asset.</span>
                           </td>
                         </tr>
                       </tbody>
+                      
                     </table>
                 </div>
             </div>

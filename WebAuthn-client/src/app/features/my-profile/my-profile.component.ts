@@ -6,6 +6,7 @@ import { Assertion } from 'src/app/interfaces/assertion';
 import { MainService } from 'src/app/service/main.service';
 import { encode, decode } from 'base64-arraybuffer'
 import { User } from 'src/app/interfaces/user';
+import { myAssets } from 'src/app/interfaces/myAsset';
 
 declare function strToArrayBuffer(str: String) : ArrayBuffer;
 
@@ -15,14 +16,17 @@ declare function strToArrayBuffer(str: String) : ArrayBuffer;
   styleUrls: ['./my-profile.component.css']
 })
 export class MyProfileComponent implements OnInit {
-
-  constructor(private router : Router, private http : HttpClient, public mainService : MainService) { }
+  myAssetsArray : Array<myAssets> = []
+  numberOfAssets : any = 0
+  
+  constructor(private router : Router, private http : HttpClient, public mainService : MainService) { 
+  }
 
   ngOnInit(): void {
     console.log("addr ", this.mainService.user.addr)
     console.log("this.user", this.mainService.user)
     this.checkCredential()
-    
+    this.retrieveMyAssets();
     //this.getMyTransaction()
   }
 
@@ -147,5 +151,37 @@ export class MyProfileComponent implements OnInit {
   }
 
 
+  retrieveMyAssets(){
+    let body = {
+       username : this.mainService.user.username,
+       userID : this.mainService.user.userID
+    }
+ 
+    this.http.post(this.mainService.urlLocalServer+'/assets/getMyAssets', body).subscribe( async (response : any) => {
+ 
+       this.mainService.user.myAssets = response
+       this.myAssetsArray = response
+      this.numberOfAssets = this.mainService.user.myAssets?.length
+       console.log("this.mainService.user.myAssets", this.mainService.user.myAssets)
+      
+     });
+     
+   }
+
+  getAssetByID(asset : any){
+    console.log("getassetbyid", asset)
+    let body = {
+      
+    }
+    this.http.post(this.mainService.urlLocalServer+'/assets/getMyAssets', body).subscribe( async (response : any) => {
+ 
+      this.mainService.user.myAssets = response
+      this.myAssetsArray = response
+     this.numberOfAssets = this.mainService.user.myAssets?.length
+      console.log("this.mainService.user.myAssets", this.mainService.user.myAssets)
+     
+    });
+  }
+ 
  
 }
